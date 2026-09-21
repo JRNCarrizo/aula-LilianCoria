@@ -6,6 +6,25 @@
     el.textContent = String(new Date().getFullYear());
   });
 
+  function soltar() {
+    document.querySelectorAll(".is-press").forEach(function (el) {
+      el.classList.remove("is-press");
+    });
+  }
+
+  document.addEventListener("pointerdown", function (evento) {
+    var boton = evento.target.closest(".btn, .nav a, .filtro, .brand");
+    if (boton) boton.classList.add("is-press");
+  });
+  document.addEventListener("pointerup", soltar);
+  document.addEventListener("pointercancel", soltar);
+  document.addEventListener("pointerleave", function (evento) {
+    if (evento.target && evento.target.closest) {
+      var boton = evento.target.closest(".is-press");
+      if (boton) boton.classList.remove("is-press");
+    }
+  });
+
   var page = document.body.getAttribute("data-page");
   document.querySelectorAll("[data-nav]").forEach(function (link) {
     if (link.getAttribute("data-nav") === page) {

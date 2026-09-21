@@ -25,9 +25,11 @@
       color: var(--tinta);
     }
     .toolbar {
-      position: sticky; top: 0; z-index: 40;
+      position: fixed; top: 0; left: 0; z-index: 40;
       display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
-      padding: 10px; background: var(--azul2);
+      padding: 10px 12px; background: var(--azul2);
+      width: 100%;
+      box-sizing: border-box;
     }
     .toolbar-acciones,
     .toolbar-secciones { display: contents; }
@@ -35,47 +37,16 @@
       font-family: inherit; text-transform: uppercase; font-weight: 700;
       background: white; color: var(--azul2); border: 0; border-radius: 999px;
       padding: 8px 14px; text-decoration: none; cursor: pointer; font-size: 13px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex: 1 1 140px;
+      min-height: 40px;
+      text-align: center;
     }
     .page {
       width: 210mm; min-height: 297mm; margin: 14px auto;
       background: var(--fondo); padding: 11mm 12mm 14mm;
       box-shadow: 0 10px 24px rgba(0,0,0,.12);
       page-break-after: always; position: relative;
-    }
-    @media screen and (max-width: 900px) {
-      .toolbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100svw;
-        max-width: 100svw;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        padding: 10px 12px 12px;
-      }
-      .toolbar-acciones {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-      .toolbar-secciones {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .toolbar a, .toolbar button {
-        min-height: 42px;
-        padding: 8px 10px;
-        font-size: 12px;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .toolbar-secciones a { flex: 1 1 auto; }
-      body { padding-top: 118px; }
     }
     h1,h2,h3,p { margin: 0; }
     .datos { font-size: 13px; font-weight: 700; line-height: 1.9; margin-bottom: 8px; }
@@ -160,7 +131,7 @@
     .pie { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; font-size: 11px; display: flex; justify-content: space-between; font-weight: 700; color: #5d6d7e; }
     .clave p { margin: 4px 0; font-size: 14px; font-weight: 700; }
     @media print {
-      body { background: #fff; padding-top: 0; }
+      body { background: #fff; }
       .toolbar { display: none; }
       .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
     }
@@ -607,5 +578,30 @@
     </div>
     <p class="pie"><span>NO ENTREGAR ESTA HOJA A LOS CHICOS</span><span>LA TORTILLA DE PAPAS</span></p>
   </section>
+  <script>
+    (function () {
+      var barra = document.querySelector(".toolbar");
+      if (!barra) return;
+
+      function ubicar() {
+        var vista = window.visualViewport;
+        if (!vista) {
+          barra.style.width = "100%";
+          barra.style.transform = "none";
+          return;
+        }
+        barra.style.width = vista.width + "px";
+        barra.style.transform = "translate(" + vista.offsetLeft + "px," + vista.offsetTop + "px)";
+      }
+
+      ubicar();
+      if (window.visualViewport) {
+        visualViewport.addEventListener("resize", ubicar);
+        visualViewport.addEventListener("scroll", ubicar);
+      }
+      window.addEventListener("resize", ubicar);
+      window.addEventListener("scroll", ubicar, true);
+    })();
+  </script>
 </body>
 </html>
