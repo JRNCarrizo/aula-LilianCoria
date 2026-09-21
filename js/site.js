@@ -120,13 +120,13 @@
     var item = actividades.find(function (a) { return a.destacada; }) || actividades[0];
     if (item) {
       destacada.innerHTML =
+        '<p class="ficha-cinta">Ficha de clase</p>' +
         '<p class="eyebrow">Actividad disponible</p>' +
         "<h2>" + item.titulo + "</h2>" +
         "<p>" + item.resumen + "</p>" +
-        '<p class="ficha-linea">' + item.grado + " · " + item.area + " · " + item.tipo + "</p>" +
+        '<p class="ficha-linea">' + item.grado + " · " + item.area + " · " + item.paginas + " páginas</p>" +
         '<div class="acciones">' +
-          '<a class="btn btn-terra" href="' + hrefActividad(item.id) + '">Ver la actividad</a>' +
-          '<a class="btn btn-ghost" href="' + root + 'actividades/">Todas las actividades</a>' +
+          '<a class="btn btn-terra" href="' + hrefActividad(item.id) + '">Abrir ficha</a>' +
         "</div>";
     }
   }

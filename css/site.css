@@ -161,6 +161,134 @@ button,
   }
 }
 
+.portada {
+  position: relative;
+  overflow: hidden;
+  padding: 36px 0 72px;
+}
+
+.portada-luz {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 8% 10%, #9ee8f5 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 92% 0%, #b7efe6 0%, transparent 48%),
+    linear-gradient(180deg, #dff6fb 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.portada-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px;
+  align-items: center;
+  padding: 28px 0 10px;
+}
+
+.sello {
+  display: inline-block;
+  margin: 0 0 16px;
+  padding: 6px 12px;
+  border: 1.5px dashed var(--sage);
+  border-radius: 999px;
+  color: var(--sage-deep);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.portada-texto h1 {
+  font-size: clamp(44px, 7vw, 76px);
+  max-width: 12ch;
+}
+
+.portada-texto h1 em {
+  font-style: italic;
+  color: var(--sage-deep);
+}
+
+.areas-vivo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.areas-vivo li {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--sage-deep);
+}
+
+.mesa-fichas {
+  position: relative;
+  min-height: 420px;
+}
+
+.papel {
+  position: absolute;
+  inset: 28px 18px auto 18px;
+  height: 86%;
+  border-radius: 18px;
+  background: #f7fcff;
+  border: 1px solid #c9e6ef;
+  box-shadow: var(--shadow);
+}
+
+.papel-1 { transform: rotate(4deg); }
+.papel-2 { transform: rotate(-5deg) translateY(8px); background: #e7f6f3; }
+
+.ficha-destacada {
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 27px,
+      rgba(31, 142, 196, 0.07) 28px
+    ),
+    #fff;
+  border: 1px solid #b7dce8;
+  border-radius: 22px;
+  padding: 28px 26px 24px;
+  box-shadow: 0 22px 50px rgba(12, 95, 120, 0.14);
+  transform: rotate(-1.5deg);
+}
+
+.ficha-cinta {
+  display: inline-block;
+  margin: 0 0 14px;
+  background: var(--sage-deep);
+  color: #f4fcff;
+  border-radius: 4px 4px 8px 8px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ficha-destacada h2 {
+  font-size: 32px;
+}
+
+.seccion-aula { padding-top: 12px; }
+
+.panel-aula {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 28px;
+  align-items: center;
+}
+
 .hero {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
@@ -476,10 +604,17 @@ h3 { font-size: 26px; }
   .hero,
   .pasos,
   .grid-actividades,
-  .actividad-layout {
+  .actividad-layout,
+  .portada-grid,
+  .panel-aula {
     grid-template-columns: 1fr;
   }
 
   .header-inner { flex-direction: column; align-items: flex-start; padding: 12px 0; }
   h1 { font-size: 40px; }
+  .portada { padding: 18px 0 40px; }
+  .portada-texto h1 { max-width: none; }
+  .mesa-fichas { min-height: 0; }
+  .papel { display: none; }
+  .ficha-destacada { transform: none; }
 }
