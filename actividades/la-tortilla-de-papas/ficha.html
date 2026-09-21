@@ -44,7 +44,7 @@
       text-align: center;
     }
     .vista { width: 100%; overflow: hidden; }
-    .hojas { transform-origin: top center; }
+    .hojas { width: 210mm; transform-origin: top left; }
     .page {
       width: 210mm; min-height: 297mm; margin: 14px auto;
       background: var(--fondo); padding: 11mm 12mm 14mm;
@@ -604,10 +604,11 @@
         }
         hojas.style.transform = "none";
         var anchoHoja = pagina.offsetWidth;
-        var anchoPantalla = document.documentElement.clientWidth - 16;
-        var escala = Math.min(1, anchoPantalla / anchoHoja);
-        hojas.style.transformOrigin = "top center";
-        hojas.style.transform = "scale(" + escala + ")";
+        var anchoPantalla = document.documentElement.clientWidth;
+        var escala = Math.min(1, (anchoPantalla - 16) / anchoHoja);
+        var x = (anchoPantalla - anchoHoja * escala) / 2;
+        hojas.style.transformOrigin = "top left";
+        hojas.style.transform = "translateX(" + x + "px) scale(" + escala + ")";
         marco.style.height = (hojas.scrollHeight * escala) + "px";
       }
 
