@@ -134,12 +134,42 @@
     .pie { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; font-size: 11px; display: flex; justify-content: space-between; font-weight: 700; color: #5d6d7e; }
     .clave p { margin: 4px 0; font-size: 14px; font-weight: 700; }
     @media print {
-      html, body { overflow: visible; }
-      body { background: #fff; }
-      .toolbar { display: none; }
-      .vista { overflow: visible; height: auto !important; }
-      .hojas { transform: none !important; }
-      .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+      @page { size: A4 portrait; margin: 0; }
+      html, body {
+        overflow: visible;
+        width: 210mm;
+        background: #fff;
+        margin: 0;
+        padding: 0;
+      }
+      .toolbar { display: none !important; }
+      .vista, .hojas {
+        overflow: visible !important;
+        height: auto !important;
+        width: 210mm !important;
+        transform: none !important;
+        margin: 0 !important;
+      }
+      .page {
+        width: 210mm;
+        height: 297mm;
+        min-height: 297mm;
+        max-height: 297mm;
+        margin: 0;
+        padding: 10mm 12mm 12mm;
+        box-shadow: none;
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .page:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .portada { min-height: 0; }
+      .tarjeta { min-height: 0; }
     }
   </style>
 </head>
@@ -594,12 +624,17 @@
       var marco = document.querySelector(".vista");
       var pagina = document.querySelector(".page");
       var barra = document.querySelector(".toolbar");
+      var imprimiendo = false;
       if (!hojas || !marco || !pagina) return;
 
+      function soltarEscala() {
+        hojas.style.transform = "none";
+        marco.style.height = "auto";
+      }
+
       function ajustar() {
-        if (window.matchMedia("print").matches) {
-          hojas.style.transform = "none";
-          marco.style.height = "auto";
+        if (imprimiendo || window.matchMedia("print").matches) {
+          soltarEscala();
           return;
         }
         hojas.style.transform = "none";
@@ -625,13 +660,20 @@
 
       ajustar();
       window.addEventListener("load", ajustar);
-      window.addEventListener("resize", ajustar);
-      window.addEventListener("orientationchange", ajustar);
-      window.addEventListener("beforeprint", function () {
-        hojas.style.transform = "none";
-        marco.style.height = "auto";
+      window.addEventListener("resize", function () {
+        if (!imprimiendo) ajustar();
       });
-      window.addEventListener("afterprint", ajustar);
+      window.addEventListener("orientationchange", function () {
+        if (!imprimiendo) ajustar();
+      });
+      window.addEventListener("beforeprint", function () {
+        imprimiendo = true;
+        soltarEscala();
+      });
+      window.addEventListener("afterprint", function () {
+        imprimiendo = false;
+        ajustar();
+      });
     })();
   </script>
 </body>
