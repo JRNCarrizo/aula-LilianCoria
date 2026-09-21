@@ -37,6 +37,7 @@
       background: white; color: var(--azul2); border: 0; border-radius: 999px;
       padding: 8px 14px; text-decoration: none; cursor: pointer; font-size: 13px;
     }
+    .hojas { width: 100%; overflow-x: auto; }
     .page {
       width: 210mm; min-height: 297mm; margin: 14px auto;
       background: var(--fondo); padding: 11mm 12mm 14mm;
@@ -46,9 +47,6 @@
     @media screen and (max-width: 900px) {
       html, body { overflow-x: hidden; }
       .toolbar {
-        position: sticky;
-        top: 0;
-        left: 0;
         width: 100%;
         max-width: 100%;
         display: flex;
@@ -76,18 +74,6 @@
       .toolbar-secciones a:last-child {
         grid-column: 1 / -1;
       }
-      .page {
-        width: auto;
-        max-width: calc(100% - 20px);
-        min-height: auto;
-        margin: 12px 10px;
-        padding: 16px;
-      }
-      .portada { min-height: 70vh; }
-      .tarjeta { min-height: auto; }
-      .grid2,
-      .cruz-wrap,
-      .pistas { grid-template-columns: 1fr; }
     }
     h1,h2,h3,p { margin: 0; }
     .datos { font-size: 13px; font-weight: 700; line-height: 1.9; margin-bottom: 8px; }
@@ -172,8 +158,9 @@
     .pie { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; font-size: 11px; display: flex; justify-content: space-between; font-weight: 700; color: #5d6d7e; }
     .clave p { margin: 4px 0; font-size: 14px; font-weight: 700; }
     @media print {
-      body { background: #fff; padding-top: 0; }
+      body { background: #fff; }
       .toolbar { display: none; }
+      .hojas { overflow: visible; }
       .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
     }
   </style>
@@ -287,6 +274,7 @@
     </symbol>
   </svg>
 
+  <div class="hojas">
   <section class="page portada">
     <p class="kicker">PRÁCTICAS DEL LENGUAJE · PRIMERO · 6 AÑOS</p>
     <h1 class="titulo">LA TORTILLA DE PAPAS</h1>
@@ -619,5 +607,6 @@
     </div>
     <p class="pie"><span>NO ENTREGAR ESTA HOJA A LOS CHICOS</span><span>LA TORTILLA DE PAPAS</span></p>
   </section>
+  </div>
 </body>
 </html>
