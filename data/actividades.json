@@ -1,0 +1,18 @@
+{
+  "nota": "Catálogo de referencia. El sitio lee js/actividades.js para poder abrirse también sin servidor. Al agregar una actividad, actualizar ambos.",
+  "actividades": [
+    {
+      "id": "la-tortilla-de-papas",
+      "titulo": "La tortilla de papas",
+      "kicker": "Después de leer",
+      "grado": "1.º",
+      "area": "Prácticas del Lenguaje",
+      "tipo": "Ficha imprimible",
+      "cuento": "La tortilla de papas",
+      "autoras": "Sandra Siemens y Claudia Degliuomini",
+      "resumen": "Actividades de letras iniciales, escritura de nombres, género y número, a partir del cuento de Sebastiana y Nicolasa.",
+      "paginas": 8,
+      "destacada": true
+    }
+  ]
+}

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LA TORTILLA DE PAPAS — ACTIVIDADES 1.º</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --azul: #2b6cb0;
+      --azul2: #1a4f8b;
+      --naranja: #e67e22;
+      --rojo: #e74c3c;
+      --verde: #1e8449;
+      --tinta: #1f2a37;
+      --fondo: #fffef9;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Fredoka", "Nunito", Arial, sans-serif;
+      text-transform: uppercase;
+      background: #d6e6f5;
+      color: var(--tinta);
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 30;
+      display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+      padding: 10px; background: var(--azul2);
+    }
+    .toolbar a, .toolbar button {
+      font-family: inherit; text-transform: uppercase; font-weight: 700;
+      background: white; color: var(--azul2); border: 0; border-radius: 999px;
+      padding: 8px 14px; text-decoration: none; cursor: pointer; font-size: 13px;
+    }
+    .page {
+      width: 210mm; min-height: 297mm; margin: 14px auto;
+      background: var(--fondo); padding: 11mm 12mm 14mm;
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      page-break-after: always; position: relative;
+    }
+    h1,h2,h3,p { margin: 0; }
+    .datos { font-size: 13px; font-weight: 700; line-height: 1.9; margin-bottom: 8px; }
+    .linea { border-bottom: 2px solid #1f2a37; display: inline-block; min-width: 180px; }
+    .kicker { color: var(--azul); font-size: 13px; font-weight: 800; letter-spacing: .6px; }
+    .titulo { font-family: "Nunito", sans-serif; color: var(--azul); font-size: 28px; line-height: 1.05; margin: 4px 0 8px; }
+    .consigna {
+      background: #ebf4ff; border: 3px solid var(--azul); border-radius: 14px;
+      padding: 8px 12px; font-size: 15px; font-weight: 700; margin-bottom: 10px;
+    }
+    .chip { display: inline-block; background: var(--azul); color: #fff; border-radius: 999px; padding: 3px 10px; font-size: 12px; margin-bottom: 6px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .tarjeta {
+      background: #fff; border: 3px dashed #1f2a37; border-radius: 16px;
+      padding: 8px; min-height: 112mm; display: flex; flex-direction: column;
+    }
+    .cab { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .letra {
+      width: 58px; height: 58px; border-radius: 50%; border: 4px solid #1f2a37;
+      display: grid; place-items: center; color: #fff; font-size: 34px; font-weight: 900; flex-shrink: 0;
+    }
+    .mini { font-size: 13px; font-weight: 800; line-height: 1.15; }
+    .ops { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; flex: 1; }
+    .op {
+      border: 3px solid #c5d4e8; border-radius: 12px; padding: 6px 4px;
+      text-align: center; background: #f8fbff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .op svg { width: 58px; height: 58px; }
+    .dibujo svg, .fig svg { width: 70px; height: 70px; }
+    .guiones { display: flex; justify-content: center; gap: 2px; margin-top: 6px; flex-wrap: wrap; }
+    .guiones i {
+      width: 11px; height: 15px;
+      border-bottom: 2.5px solid #1f2a37;
+      display: inline-block;
+    }
+    .tipo { background: #1f2a37; color: #fff; border-radius: 999px; padding: 3px 9px; font-size: 11px; width: max-content; }
+    .dibujo { display: grid; place-items: center; flex: 1; }
+    .dibujo svg { width: 118px; height: 118px; }
+    .palabra { display: flex; justify-content: center; gap: 4px; flex-wrap: wrap; }
+    .casilla {
+      width: 30px; height: 36px; border: 3px solid #1f2a37; border-radius: 6px;
+      display: grid; place-items: center; font-size: 20px; font-weight: 900; background: #fff;
+    }
+    .casilla.falta { background: #fff3bf; }
+    .figs { display: flex; flex-direction: column; gap: 8px; margin: 8px 0 12px; }
+    .fig {
+      display: flex; align-items: center; gap: 14px;
+      background: #fff; border: 2px solid #c5d4e8; border-radius: 12px; padding: 6px 12px;
+    }
+    .fig svg { width: 52px; height: 52px; flex-shrink: 0; }
+    .fig .cajas { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; }
+    .fig .cajas i {
+      width: 24px; height: 30px; border: 2px solid #1f2a37; border-radius: 4px;
+      display: block; flex: 0 0 24px; background: #fff;
+    }
+    .pedacitos { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 8px 0; }
+    .peda {
+      background: #fff3bf; border: 3px solid #1f2a37; border-radius: 10px;
+      padding: 6px 12px; font-size: 20px; font-weight: 900;
+    }
+    .pistas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .pista-box { background: #fff; border: 3px solid var(--naranja); border-radius: 12px; padding: 8px; font-size: 13px; font-weight: 700; }
+    .cruz-wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 10px; align-items: start; }
+    table.cruz { border-collapse: collapse; margin: 4px auto 0; }
+    table.cruz td { width: 30px; height: 30px; }
+    table.cruz td.cell {
+      border: 2.5px solid #1f2a37; background: #fff; position: relative;
+    }
+    table.cruz .num { position: absolute; top: 1px; left: 2px; font-size: 9px; color: var(--rojo); font-weight: 900; }
+    .pista {
+      background: #fff; border: 2px solid #1f2a37; border-radius: 12px;
+      padding: 6px; display: flex; gap: 8px; align-items: center; margin-bottom: 6px;
+    }
+    .pista svg { width: 40px; height: 40px; flex-shrink: 0; }
+    .pista b { color: var(--rojo); font-size: 16px; }
+    .pista span { font-size: 12px; line-height: 1.2; font-weight: 700; }
+    .portada { text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 10px; min-height: 270mm; }
+    .fila-iconos { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .fila-iconos svg { width: 78px; height: 78px; }
+    .nota { background: #fff; border: 3px dashed var(--azul); border-radius: 16px; padding: 12px; font-size: 15px; font-weight: 700; text-align: left; }
+    .pie { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; font-size: 11px; display: flex; justify-content: space-between; font-weight: 700; color: #5d6d7e; }
+    .clave p { margin: 4px 0; font-size: 14px; font-weight: 700; }
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <a href="./">VOLVER AL AULA</a>
+    <button onclick="window.print()">IMPRIMIR / PDF</button>
+    <a href="#a">A · TARJETAS</a>
+    <a href="#b">B · NOMBRES</a>
+    <a href="#eya">ESCRITURA</a>
+    <a href="#c">C · CRUCIGRAMA</a>
+    <a href="#clave">RESPUESTAS</a>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="tomate" viewBox="0 0 80 80">
+      <circle cx="40" cy="48" r="22" fill="#e74c3c"/>
+      <ellipse cx="32" cy="42" rx="6" ry="9" fill="#fff" opacity=".25"/>
+      <path d="M26 28c8 10 20 10 28 0-6 14-22 14-28 0z" fill="#27ae60"/>
+      <path d="M40 22v16" stroke="#1e8449" stroke-width="3"/>
+    </symbol>
+    <symbol id="naranja" viewBox="0 0 80 80">
+      <circle cx="40" cy="46" r="22" fill="#f39c12"/>
+      <circle cx="40" cy="46" r="14" fill="none" stroke="#e67e22" stroke-width="2"/>
+      <path d="M50 22c6 10-2 16-8 18 12 0 16-10 12-20z" fill="#27ae60"/>
+    </symbol>
+    <symbol id="lirio" viewBox="0 0 80 80">
+      <path d="M40 72V40" stroke="#1e8449" stroke-width="4"/>
+      <path d="M40 52c-14 4-18 14-18 14" fill="none" stroke="#27ae60" stroke-width="3"/>
+      <ellipse cx="40" cy="28" rx="8" ry="18" fill="#9b59b6"/>
+      <ellipse cx="27" cy="34" rx="7" ry="15" fill="#8e44ad" transform="rotate(-32 27 34)"/>
+      <ellipse cx="53" cy="34" rx="7" ry="15" fill="#8e44ad" transform="rotate(32 53 34)"/>
+      <circle cx="40" cy="38" r="4" fill="#f1c40f"/>
+    </symbol>
+    <symbol id="aceituna" viewBox="0 0 80 80">
+      <ellipse cx="38" cy="46" rx="15" ry="20" fill="#1e8449"/>
+      <ellipse cx="33" cy="40" rx="5" ry="8" fill="#d5f5e3" opacity=".8"/>
+      <circle cx="50" cy="24" r="3.5" fill="#6c3483"/>
+      <path d="M50 24c8 4 8 12 4 18" fill="none" stroke="#145a32" stroke-width="3"/>
+    </symbol>
+    <symbol id="papa" viewBox="0 0 80 80">
+      <ellipse cx="40" cy="44" rx="26" ry="18" fill="#c9a227"/>
+      <circle cx="28" cy="40" r="3" fill="#7d6608"/>
+      <circle cx="46" cy="48" r="3" fill="#7d6608"/>
+      <circle cx="52" cy="38" r="2.4" fill="#7d6608"/>
+    </symbol>
+    <symbol id="pan" viewBox="0 0 80 80">
+      <path d="M12 50c6-22 50-22 56 0v6c-6 10-50 10-56 0z" fill="#e1b12c"/>
+      <path d="M18 48c6-14 38-14 44 0" fill="none" stroke="#ca6f1e" stroke-width="2"/>
+      <path d="M24 42c2-3 6-3 8 0M36 40c2-3 6-3 8 0M48 42c2-3 6-3 8 0" fill="none" stroke="#b9770e" stroke-width="2"/>
+    </symbol>
+    <symbol id="huevo" viewBox="0 0 80 80">
+      <ellipse cx="40" cy="44" rx="16" ry="22" fill="#fdf6d8" stroke="#d4ac0d" stroke-width="3"/>
+      <ellipse cx="34" cy="38" rx="5" ry="8" fill="#fff"/>
+    </symbol>
+    <symbol id="mesa" viewBox="0 0 80 80">
+      <rect x="8" y="32" width="64" height="10" rx="3" fill="#a0522d"/>
+      <rect x="14" y="42" width="7" height="24" fill="#7b3f12"/>
+      <rect x="59" y="42" width="7" height="24" fill="#7b3f12"/>
+      <circle cx="28" cy="26" r="7" fill="#e74c3c"/>
+      <ellipse cx="52" cy="27" rx="11" ry="6" fill="#f5cba7"/>
+    </symbol>
+    <symbol id="sol" viewBox="0 0 80 80">
+      <circle cx="40" cy="40" r="13" fill="#f1c40f"/>
+      <g stroke="#e67e22" stroke-width="4" stroke-linecap="round">
+        <path d="M40 8v9M40 63v9M8 40h9M63 40h9M17 17l7 7M56 56l7 7M17 63l7-7M56 24l7-7"/>
+      </g>
+    </symbol>
+    <symbol id="casa" viewBox="0 0 80 80">
+      <polygon points="40,10 72,38 8,38" fill="#e74c3c"/>
+      <rect x="16" y="38" width="48" height="32" fill="#f6e2c6"/>
+      <rect x="34" y="48" width="12" height="22" fill="#7b3f12"/>
+      <rect x="22" y="46" width="10" height="10" fill="#3498db"/>
+    </symbol>
+    <symbol id="tortilla" viewBox="0 0 80 80">
+      <ellipse cx="40" cy="46" rx="28" ry="18" fill="#f4d03f"/>
+      <ellipse cx="40" cy="44" rx="21" ry="12" fill="#f7dc6f"/>
+      <circle cx="32" cy="44" r="3" fill="#b9770e"/>
+      <circle cx="48" cy="48" r="3" fill="#b9770e"/>
+      <circle cx="44" cy="40" r="2.5" fill="#b9770e"/>
+    </symbol>
+    <symbol id="abuela" viewBox="0 0 80 80">
+      <circle cx="40" cy="28" r="13" fill="#f5cba7"/>
+      <path d="M24 28c2-14 30-14 32 0 0 7-8 10-16 10s-16-3-16-10z" fill="#6d4c41"/>
+      <circle cx="40" cy="62" r="16" fill="#e67e22"/>
+      <rect x="30" y="44" width="20" height="8" fill="#f5cba7"/>
+      <circle cx="35" cy="28" r="2" fill="#1f2a37"/>
+      <circle cx="45" cy="28" r="2" fill="#1f2a37"/>
+      <path d="M35 34c3 3 7 3 10 0" fill="none" stroke="#1f2a37" stroke-width="2"/>
+    </symbol>
+    <symbol id="abuela2" viewBox="0 0 80 80">
+      <circle cx="40" cy="28" r="13" fill="#f5cba7"/>
+      <path d="M23 30c4-16 30-16 34 0-2 8-10 11-17 11s-15-3-17-11z" fill="#1a5276"/>
+      <circle cx="40" cy="62" r="16" fill="#8e44ad"/>
+      <rect x="30" y="44" width="20" height="8" fill="#f5cba7"/>
+      <circle cx="35" cy="28" r="2" fill="#1f2a37"/>
+      <circle cx="45" cy="28" r="2" fill="#1f2a37"/>
+      <path d="M35 34c3 3 7 3 10 0" fill="none" stroke="#1f2a37" stroke-width="2"/>
+    </symbol>
+    <symbol id="mercado" viewBox="0 0 80 80">
+      <rect x="12" y="36" width="56" height="28" fill="#f6e2c6"/>
+      <polygon points="8,36 40,14 72,36" fill="#27ae60"/>
+      <rect x="35" y="46" width="10" height="18" fill="#7b3f12"/>
+      <circle cx="24" cy="50" r="5" fill="#e74c3c"/>
+      <circle cx="56" cy="50" r="5" fill="#f39c12"/>
+    </symbol>
+  </svg>
+
+  <section class="page portada">
+    <p class="kicker">PRÁCTICAS DEL LENGUAJE · PRIMERO · 6 AÑOS</p>
+    <h1 class="titulo">LA TORTILLA DE PAPAS</h1>
+    <p style="font-size:20px;font-weight:800;">ACTIVIDADES PARA DESPUÉS DE LEER EL CUENTO</p>
+    <div class="fila-iconos">
+      <svg><use href="#tomate"/></svg>
+      <svg><use href="#naranja"/></svg>
+      <svg><use href="#lirio"/></svg>
+      <svg><use href="#aceituna"/></svg>
+      <svg><use href="#pan"/></svg>
+      <svg><use href="#papa"/></svg>
+    </div>
+    <div class="nota">
+      <p>A) 8 TARJETAS: REDONDEÁ LO QUE EMPIEZA CON LA LETRA.</p>
+      <p style="margin-top:8px">B) COMPLETÁ EL NOMBRE DE LAS SIGUIENTES IMÁGENES.</p>
+      <p style="margin-top:8px">C) CRUCIGRAMA CON IMÁGENES Y PISTAS.</p>
+      <p style="margin-top:8px">MÁS: ESCRITURA COMO EN EYA, PÁGINA 166.</p>
+    </div>
+    <p class="datos">ALUMNO/A: ________________________________&nbsp;&nbsp; FECHA: ____ / ____ / ________</p>
+    <p class="pie"><span>SANDRA SIEMENS · CLAUDIA DEGLIUOMINI</span><span>MAYÚSCULAS · COLOR</span></p>
+  </section>
+
+  <section class="page" id="a">
+    <p class="datos">NOMBRE: <span class="linea"></span></p>
+    <span class="chip">ACTIVIDAD A · TARJETAS 1 A 4</span>
+    <h2 class="titulo">REDONDEÁ LO QUE EMPIEZA CON LA LETRA</h2>
+    <p class="consigna">OBSERVÁ LA LETRA. ENCERRÁ EN UN CÍRCULO LOS DIBUJOS QUE EMPIECEN CON ESA LETRA. ESCRIBÍ EL NOMBRE: UNA RAYA POR CADA LETRA.</p>
+    <div class="grid2">
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#e74c3c">T</div><p class="mini">TARJETA 1<br>¿QUÉ EMPIEZA CON T?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#tomate"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#sol"/></svg><div class="guiones"><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#tortilla"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#mesa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#f39c12">N</div><p class="mini">TARJETA 2<br>¿QUÉ EMPIEZA CON N?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#naranja"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#papa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#abuela2"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#lirio"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#8e44ad">L</div><p class="mini">TARJETA 3<br>¿QUÉ EMPIEZA CON L?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#mesa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#lirio"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#pan"/></svg><div class="guiones"><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#casa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#1e8449">A</div><p class="mini">TARJETA 4<br>¿QUÉ EMPIEZA CON A?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#aceituna"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#naranja"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#huevo"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#tomate"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+    </div>
+    <p class="pie"><span>LA TORTILLA DE PAPAS</span><span>RECORTÁ POR LOS PUNTOS</span></p>
+  </section>
+
+  <section class="page">
+    <p class="datos">NOMBRE: <span class="linea"></span></p>
+    <span class="chip">ACTIVIDAD A · TARJETAS 5 A 8</span>
+    <h2 class="titulo">REDONDEÁ LO QUE EMPIEZA CON LA LETRA</h2>
+    <p class="consigna">OBSERVÁ LA LETRA. ENCERRÁ EN UN CÍRCULO LOS DIBUJOS QUE EMPIECEN CON ESA LETRA. ESCRIBÍ EL NOMBRE: UNA RAYA POR CADA LETRA.</p>
+    <div class="grid2">
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#9b59b6">P</div><p class="mini">TARJETA 5<br>¿QUÉ EMPIEZA CON P?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#papa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#tomate"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#pan"/></svg><div class="guiones"><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#sol"/></svg><div class="guiones"><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#e67e22">S</div><p class="mini">TARJETA 6<br>¿QUÉ EMPIEZA CON S?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#sol"/></svg><div class="guiones"><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#mesa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#abuela"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#lirio"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#16a085">H</div><p class="mini">TARJETA 7<br>¿QUÉ EMPIEZA CON H?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#casa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#huevo"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#papa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#naranja"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <div class="cab"><div class="letra" style="background:#c0392b">M</div><p class="mini">TARJETA 8<br>¿QUÉ EMPIEZA CON M?</p></div>
+        <div class="ops">
+          <div class="op"><svg><use href="#tomate"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#mesa"/></svg><div class="guiones"><i></i><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#pan"/></svg><div class="guiones"><i></i><i></i><i></i></div></div>
+          <div class="op"><svg><use href="#mercado"/></svg><div class="guiones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+      </article>
+    </div>
+    <p class="pie"><span>LA TORTILLA DE PAPAS</span><span>RECORTÁ POR LOS PUNTOS</span></p>
+  </section>
+
+  <section class="page" id="b">
+    <p class="datos">NOMBRE: <span class="linea"></span></p>
+    <span class="chip">ACTIVIDAD B · TARJETAS 1 A 4</span>
+    <h2 class="titulo">COMPLETA EL NOMBRE DE LAS SIGUIENTES IMÁGENES</h2>
+    <p class="consigna">MIRÁ EL DIBUJO. ESCRIBÍ UNA LETRA EN CADA CUADRITO AMARILLO. EN LIRIOS Y ACEITUNAS YA ESTÁN LAS VOCALES: COMPLETÁ LAS CONSONANTES.</p>
+    <div class="grid2">
+      <article class="tarjeta">
+        <span class="tipo">SÍLABA INICIAL</span>
+        <div class="dibujo"><svg><use href="#tomate"/></svg></div>
+        <div class="palabra">
+          <div class="casilla falta"></div><div class="casilla falta"></div>
+          <div class="casilla">M</div><div class="casilla">A</div><div class="casilla">T</div><div class="casilla">E</div><div class="casilla">S</div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <span class="tipo">SÍLABA INICIAL</span>
+        <div class="dibujo"><svg><use href="#naranja"/></svg></div>
+        <div class="palabra">
+          <div class="casilla falta"></div><div class="casilla falta"></div>
+          <div class="casilla">R</div><div class="casilla">A</div><div class="casilla">N</div><div class="casilla">J</div><div class="casilla">A</div><div class="casilla">S</div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <span class="tipo">COMPLETÁ LAS CONSONANTES</span>
+        <div class="dibujo"><svg><use href="#lirio"/></svg></div>
+        <div class="palabra">
+          <div class="casilla falta"></div><div class="casilla">I</div>
+          <div class="casilla falta"></div><div class="casilla">I</div>
+          <div class="casilla">O</div><div class="casilla falta"></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <span class="tipo">COMPLETÁ LAS CONSONANTES</span>
+        <div class="dibujo"><svg><use href="#aceituna"/></svg></div>
+        <div class="palabra">
+          <div class="casilla">A</div><div class="casilla falta"></div>
+          <div class="casilla">E</div><div class="casilla">I</div>
+          <div class="casilla falta"></div><div class="casilla">U</div>
+          <div class="casilla falta"></div><div class="casilla">A</div>
+          <div class="casilla falta"></div>
+        </div>
+      </article>
+    </div>
+    <p class="pie"><span>TOMATES · NARANJAS · LIRIOS · ACEITUNAS</span><span>UN CUADRITO = UNA LETRA</span></p>
+  </section>
+
+  <section class="page">
+    <p class="datos">NOMBRE: <span class="linea"></span></p>
+    <span class="chip">ACTIVIDAD B · TARJETAS 5 A 8</span>
+    <h2 class="titulo">COMPLETA EL NOMBRE DE LAS SIGUIENTES IMÁGENES</h2>
+    <p class="consigna">MIRÁ EL DIBUJO. ESCRIBÍ UNA LETRA EN CADA CUADRITO AMARILLO. EN HUEVOS YA ESTÁN LAS VOCALES: COMPLETÁ LAS CONSONANTES.</p>
+    <div class="grid2">
+      <article class="tarjeta">
+        <span class="tipo">SÍLABA INICIAL</span>
+        <div class="dibujo"><svg><use href="#pan"/></svg></div>
+        <div class="palabra">
+          <div class="casilla falta"></div><div class="casilla falta"></div>
+          <div class="casilla">N</div><div class="casilla">E</div><div class="casilla">S</div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <span class="tipo">SÍLABA FINAL</span>
+        <div class="dibujo"><svg><use href="#papa"/></svg></div>
+        <div class="palabra">
+          <div class="casilla">P</div><div class="casilla">A</div>
+          <div class="casilla falta"></div><div class="casilla falta"></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <span class="tipo">COMPLETÁ LAS CONSONANTES</span>
+        <div class="dibujo"><svg><use href="#huevo"/></svg></div>
+        <div class="palabra">
+          <div class="casilla falta"></div><div class="casilla">U</div>
+          <div class="casilla">E</div><div class="casilla falta"></div>
+          <div class="casilla">O</div><div class="casilla falta"></div>
+        </div>
+      </article>
+      <article class="tarjeta">
+        <span class="tipo">SÍLABA FINAL</span>
+        <div class="dibujo"><svg><use href="#mesa"/></svg></div>
+        <div class="palabra">
+          <div class="casilla">M</div><div class="casilla">E</div>
+          <div class="casilla falta"></div><div class="casilla falta"></div>
+        </div>
+      </article>
+    </div>
+    <p class="pie"><span>PANES · PAPA · HUEVOS · MESA</span><span>UN CUADRITO = UNA LETRA</span></p>
+  </section>
+
+  <section class="page" id="eya">
+    <p class="datos">NOMBRE: <span class="linea"></span></p>
+    <span class="chip">PARA PENSAR LA ESCRITURA · COMO EN EYA P. 166-167</span>
+    <h2 class="titulo">LO QUE COMPRÓ SEBASTIANA</h2>
+    <p class="consigna">1. ESCRIBÍ EL NOMBRE DE TODO LO QUE COMPRÓ. ANDÁ LEYENDO CON EL DEDO PARA SABER CUÁNTAS LETRAS PONER.</p>
+    <div class="figs">
+      <div class="fig"><svg><use href="#tomate"/></svg><div class="cajas"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="fig"><svg><use href="#pan"/></svg><div class="cajas"><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="fig"><svg><use href="#aceituna"/></svg><div class="cajas"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="fig"><svg><use href="#naranja"/></svg><div class="cajas"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="fig"><svg><use href="#lirio"/></svg><div class="cajas"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    </div>
+    <p class="consigna">2. ELEGÍ EL PEDACITO QUE SIRVE PARA COMPLETAR CADA NOMBRE.</p>
+    <div class="pedacitos">
+      <span class="peda">TOMA</span><span class="peda">TES</span>
+      <span class="peda">NA</span><span class="peda">RANJAS</span>
+      <span class="peda">LI</span><span class="peda">RIOS</span>
+      <span class="peda">ACEITU</span><span class="peda">NAS</span>
+      <span class="peda">PA</span><span class="peda">NES</span>
+    </div>
+    <div class="pistas" style="margin-top:12px">
+      <div class="pista-box">PISTA: EMPIEZA COMO <b>TORTILLA</b> Y <b>TOBOGÁN</b>.<br><br>________________</div>
+      <div class="pista-box">PISTA: TERMINA COMO <b>HOJAS</b> Y <b>CAJAS</b>.<br><br>________________</div>
+    </div>
+    <p class="pie"><span>TOMATES · PANES · ACEITUNAS · NARANJAS · LIRIOS</span><span>REVISÁ Y CORREGÍ</span></p>
+  </section>
+
+  <section class="page" id="c">
+    <p class="datos">NOMBRE: <span class="linea"></span></p>
+    <span class="chip">ACTIVIDAD C · CRUCIGRAMA</span>
+    <h2 class="titulo">COMPLETÁ EL CRUCIGRAMA</h2>
+    <p class="consigna">MIRÁ LAS IMÁGENES Y LAS PISTAS. FIJATE SI HABLAN DE UNO O DE VARIOS Y SI ES EL/LOS O LA/LAS. ESCRIBÍ LA PALABRA QUE COINCIDA EN GÉNERO Y NÚMERO.</p>
+    <div class="cruz-wrap">
+      <table class="cruz">
+        <tr>
+          <td></td><td></td><td></td><td></td><td></td>
+          <td class="cell"><span class="num">1</span></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td>
+          <td class="cell"><span class="num">2</span></td>
+          <td></td><td class="cell"></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="cell"><span class="num">3</span></td>
+          <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td>
+          <td class="cell"></td>
+          <td></td><td class="cell"></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="cell"><span class="num">4</span></td>
+          <td class="cell"></td><td class="cell"></td><td class="cell"></td>
+          <td class="cell"><span class="num">5</span></td>
+          <td class="cell"></td>
+          <td class="cell"><span class="num">6</span></td>
+          <td class="cell"></td><td class="cell"></td>
+          <td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td>
+          <td class="cell"></td>
+          <td></td><td class="cell"></td>
+          <td class="cell"></td>
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td><td></td>
+          <td class="cell"><span class="num">7</span></td>
+          <td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td><td class="cell"></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="cell"></td>
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="cell"></td>
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="cell"></td>
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+      </table>
+      <div>
+        <p class="mini" style="color:var(--azul);margin-bottom:6px">HORIZONTAL →</p>
+        <div class="pista"><b>3</b><svg><use href="#tomate"/></svg><span>SON ROJOS Y REDONDOS. LOS COMPRÓ EN LA VERDULERÍA.</span></div>
+        <div class="pista"><b>4</b><svg><use href="#mesa"/></svg><span>ES DE MADERA. EN ELLA SEBASTIANA DEJA LAS COMPRAS.</span></div>
+        <div class="pista"><b>5</b><svg><use href="#sol"/></svg><span>LAS NARANJAS SON GRANDES COMO ELLOS.</span></div>
+        <div class="pista"><b>7</b><svg><use href="#naranja"/></svg><span>SON DULCES Y JUGOSAS. LLEGARON AL MERCADO.</span></div>
+        <p class="mini" style="color:var(--azul);margin:8px 0 6px">VERTICAL ↓</p>
+        <div class="pista"><b>1</b><svg><use href="#huevo"/></svg><span>SON BLANCOS. NO TENÍA NINGUNO PARA LA TORTILLA.</span></div>
+        <div class="pista"><b>2</b><svg><use href="#papa"/></svg><span>SON MARRONES. CON ELLAS SE HACE LA TORTILLA.</span></div>
+        <div class="pista"><b>6</b><svg><use href="#lirio"/></svg><span>SON AZULES Y PERFUMADOS. LOS COMPRÓ EN LA PLAZA.</span></div>
+      </div>
+    </div>
+    <p class="pie"><span>ESCRIBÍ CON LETRA MAYÚSCULA</span><span>LA TORTILLA DE PAPAS</span></p>
+  </section>
+
+  <section class="page" id="clave">
+    <span class="chip">SOLO PARA LA DOCENTE</span>
+    <h2 class="titulo">CLAVE DE RESPUESTAS</h2>
+    <div class="nota clave">
+      <p><b>A) TARJETAS</b></p>
+      <p>1 T: TOMATE · TORTILLA &nbsp; 2 N: NARANJA · NICOLASA</p>
+      <p>3 L: LIRIO &nbsp; 4 A: ACEITUNA &nbsp; 5 P: PAPA · PAN</p>
+      <p>6 S: SOL · SEBASTIANA &nbsp; 7 H: HUEVO &nbsp; 8 M: MESA · MERCADO</p>
+      <p style="margin-top:10px"><b>B) NOMBRES</b></p>
+      <p>TOMATES → TO &nbsp; NARANJAS → NA</p>
+      <p>LIRIOS → L · R · S &nbsp; ACEITUNAS → C · T · N · S</p>
+      <p>PANES → PA &nbsp; PAPA → PA &nbsp; HUEVOS → H · V · S &nbsp; MESA → SA</p>
+      <p style="margin-top:10px"><b>ESCRITURA EYA</b></p>
+      <p>TOMATES (7) · PANES (5) · ACEITUNAS (9) · NARANJAS (8) · LIRIOS (6)</p>
+      <p>EMPIEZA COMO TORTILLA: TOMATES &nbsp; TERMINA COMO HOJAS: NARANJAS</p>
+      <p style="margin-top:10px"><b>C) CRUCIGRAMA (GÉNERO Y NÚMERO)</b></p>
+      <p>1 HUEVOS (M. PL.) &nbsp; 2 PAPAS (F. PL.) &nbsp; 3 TOMATES (M. PL.)</p>
+      <p>4 MESA (F. SG.) &nbsp; 5 SOLES (M. PL.) &nbsp; 6 LIRIOS (M. PL.) &nbsp; 7 NARANJAS (F. PL.)</p>
+    </div>
+    <p class="pie"><span>NO ENTREGAR ESTA HOJA A LOS CHICOS</span><span>LA TORTILLA DE PAPAS</span></p>
+  </section>
+</body>
+</html>

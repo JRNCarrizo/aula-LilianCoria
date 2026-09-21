@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Actividades · Aula Lilian Coria</title>
+  <meta name="description" content="Listado de actividades de todas las áreas y grados, creadas por Lilian Coria.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/site.css">
+</head>
+<body data-root="../" data-page="actividades">
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../">
+        <span class="brand-mark">LC</span>
+        <span>
+          <span class="brand-kicker">Aula</span>
+          <span class="brand-name">Lilian Coria</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="../" data-nav="inicio">Inicio</a>
+        <a href="./" data-nav="actividades">Actividades</a>
+        <a href="../sobre.html" data-nav="sobre">El aula</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">Catálogo</p>
+      <h1>Actividades</h1>
+      <p>Cada carpeta es una propuesta de clase, de cualquier área y grado. Se pueden abrir, imprimir y volver a usar. Las nuevas se agregan acá, agrupadas por materia y por año.</p>
+    </header>
+    <div class="filtros-area" data-filtros></div>
+    <section class="grid-actividades seccion" data-catalogo></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>Aula Lilian Coria · Recursos de clase</p>
+      <p>© <span data-year></span></p>
+    </div>
+  </footer>
+
+  <script src="../js/actividades.js"></script>
+  <script src="../js/site.js"></script>
+</body>
+</html>
