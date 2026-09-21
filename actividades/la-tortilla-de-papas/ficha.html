@@ -24,8 +24,9 @@
       background: #d6e6f5;
       color: var(--tinta);
     }
+    html, body { overflow-x: hidden; }
     .toolbar {
-      position: fixed; top: 0; left: 0; z-index: 40;
+      position: sticky; top: 0; z-index: 40;
       display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
       padding: 10px 12px; background: var(--azul2);
       width: 100%;
@@ -42,6 +43,8 @@
       min-height: 40px;
       text-align: center;
     }
+    .vista { width: 100%; overflow: hidden; }
+    .hojas { transform-origin: top center; }
     .page {
       width: 210mm; min-height: 297mm; margin: 14px auto;
       background: var(--fondo); padding: 11mm 12mm 14mm;
@@ -131,8 +134,11 @@
     .pie { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; font-size: 11px; display: flex; justify-content: space-between; font-weight: 700; color: #5d6d7e; }
     .clave p { margin: 4px 0; font-size: 14px; font-weight: 700; }
     @media print {
+      html, body { overflow: visible; }
       body { background: #fff; }
       .toolbar { display: none; }
+      .vista { overflow: visible; height: auto !important; }
+      .hojas { transform: none !important; }
       .page { margin: 0; box-shadow: none; width: auto; min-height: auto; }
     }
   </style>
@@ -246,6 +252,8 @@
     </symbol>
   </svg>
 
+  <div class="vista">
+  <div class="hojas">
   <section class="page portada">
     <p class="kicker">PRÁCTICAS DEL LENGUAJE · PRIMERO · 6 AÑOS</p>
     <h1 class="titulo">LA TORTILLA DE PAPAS</h1>
@@ -578,29 +586,51 @@
     </div>
     <p class="pie"><span>NO ENTREGAR ESTA HOJA A LOS CHICOS</span><span>LA TORTILLA DE PAPAS</span></p>
   </section>
+  </div>
+  </div>
   <script>
     (function () {
+      var hojas = document.querySelector(".hojas");
+      var marco = document.querySelector(".vista");
+      var pagina = document.querySelector(".page");
       var barra = document.querySelector(".toolbar");
-      if (!barra) return;
+      if (!hojas || !marco || !pagina) return;
 
-      function ubicar() {
-        var vista = window.visualViewport;
-        if (!vista) {
-          barra.style.width = "100%";
-          barra.style.transform = "none";
+      function ajustar() {
+        if (window.matchMedia("print").matches) {
+          hojas.style.transform = "none";
+          marco.style.height = "auto";
           return;
         }
-        barra.style.width = vista.width + "px";
-        barra.style.transform = "translate(" + vista.offsetLeft + "px," + vista.offsetTop + "px)";
+        hojas.style.transform = "none";
+        var anchoHoja = pagina.offsetWidth;
+        var anchoPantalla = document.documentElement.clientWidth - 16;
+        var escala = Math.min(1, anchoPantalla / anchoHoja);
+        hojas.style.transformOrigin = "top center";
+        hojas.style.transform = "scale(" + escala + ")";
+        marco.style.height = (hojas.scrollHeight * escala) + "px";
       }
 
-      ubicar();
-      if (window.visualViewport) {
-        visualViewport.addEventListener("resize", ubicar);
-        visualViewport.addEventListener("scroll", ubicar);
-      }
-      window.addEventListener("resize", ubicar);
-      window.addEventListener("scroll", ubicar, true);
+      document.querySelectorAll('.toolbar a[href^="#"]').forEach(function (enlace) {
+        enlace.addEventListener("click", function (evento) {
+          var destino = document.getElementById(enlace.getAttribute("href").slice(1));
+          if (!destino) return;
+          evento.preventDefault();
+          var extra = barra ? barra.offsetHeight + 8 : 8;
+          var top = destino.getBoundingClientRect().top + window.scrollY - extra;
+          window.scrollTo({ top: top, behavior: "smooth" });
+        });
+      });
+
+      ajustar();
+      window.addEventListener("load", ajustar);
+      window.addEventListener("resize", ajustar);
+      window.addEventListener("orientationchange", ajustar);
+      window.addEventListener("beforeprint", function () {
+        hojas.style.transform = "none";
+        marco.style.height = "auto";
+      });
+      window.addEventListener("afterprint", ajustar);
     })();
   </script>
 </body>
