@@ -34,8 +34,8 @@
   <main class="wrap admin-cuerpo">
     <header class="page-head">
       <p class="eyebrow">Panel</p>
-      <h1>Panel</h1>
-      <p>Acá se copia el prompt para armar una ficha, se publica y se ve lo que ya está en el aula.</p>
+      <h1>Actividades publicadas</h1>
+      <p>Este es el listado de lo que ya está en el aula. Desde acá se ve, se edita o se elimina. Para crear una nueva, usá el atajo de arriba.</p>
     </header>
 
     <div class="admin-grid admin-grid-3">
@@ -44,10 +44,10 @@
         <h2>Nueva actividad</h2>
         <p>Subí un HTML, un Word, un PowerPoint o un PDF y publicá.</p>
       </a>
-      <a class="admin-atajo" href="#prompt-ficha">
-        <p class="eyebrow">ChatGPT</p>
+      <a class="admin-atajo" href="#prompt-ficha" id="atajo-prompt">
+        <p class="eyebrow">Opcional</p>
         <h2>Prompt de ficha</h2>
-        <p>Copiá el prompt y reemplazá el vacío por tu actividad.</p>
+        <p>Si vas a armar una ficha HTML con ChatGPT, abrí el prompt acá.</p>
       </a>
       <a class="admin-atajo" href="ajustes.html">
         <p class="eyebrow">Cuenta</p>
@@ -56,25 +56,25 @@
       </a>
     </div>
 
-    <section class="panel caja-prompt" id="prompt-ficha">
-      <p class="eyebrow">Crear ficha</p>
-      <h2>Prompt para ChatGPT</h2>
-      <p>Copiá el prompt, pegalo en ChatGPT y reemplazá <strong>[vacío]</strong> por la descripción. Sacá los corchetes: no se escribe adentro.</p>
-      <pre class="prompt-fijo" id="prompt-reglas"></pre>
-      <div class="acciones-prompt">
-        <button class="btn btn-terra" type="button" id="btn-copiar-prompt">Copiar prompt</button>
-        <p class="aviso aviso-ok" id="ok-copia" hidden style="margin:0">Copiado. Pegalo en ChatGPT.</p>
-      </div>
-    </section>
-
     <section class="bloque-publicadas">
-      <header class="page-head page-head-sub">
-        <p class="eyebrow">Listado</p>
-        <h2>Actividades publicadas</h2>
-        <p>Lo que ya está cargado en Drive y se ve en el aula.</p>
-      </header>
       <div class="lista-admin" id="lista"></div>
     </section>
+
+    <details class="panel caja-prompt" id="prompt-ficha">
+      <summary>
+        <p class="eyebrow">Opcional</p>
+        <h2>Prompt para ChatGPT</h2>
+        <p>Tocá para abrir. Copiá el prompt, pegalo en ChatGPT y, al final, reemplazá <strong>[vacío]</strong> por la descripción de la actividad a crear.</p>
+      </summary>
+      <div class="prompt-cuerpo">
+        <p>Al final del prompt dice <strong>[vacío]</strong>. Reemplazá eso por la descripción de la actividad a crear. Sacá los corchetes: no se escribe adentro.</p>
+        <pre class="prompt-fijo" id="prompt-reglas"></pre>
+        <div class="acciones-prompt">
+          <button class="btn btn-terra" type="button" id="btn-copiar-prompt">Copiar prompt</button>
+          <p class="aviso aviso-ok" id="ok-copia" hidden style="margin:0">Copiado. Pegalo en ChatGPT.</p>
+        </div>
+      </div>
+    </details>
   </main>
 
   <script src="../js/admin-config.js"></script>
@@ -91,6 +91,16 @@
     });
 
     document.getElementById("prompt-reglas").textContent = AulaPrompt.reglas;
+    var cajaPrompt = document.getElementById("prompt-ficha");
+    function abrirPrompt() {
+      cajaPrompt.open = true;
+      cajaPrompt.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    document.getElementById("atajo-prompt").addEventListener("click", function (e) {
+      e.preventDefault();
+      abrirPrompt();
+    });
+    if (location.hash === "#prompt-ficha") abrirPrompt();
     document.getElementById("btn-copiar-prompt").addEventListener("click", function () {
       var ok = document.getElementById("ok-copia");
       var texto = AulaPrompt.armar();

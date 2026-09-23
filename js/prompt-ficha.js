@@ -38,9 +38,10 @@
     "- Qué incluye cada hoja\n" +
     "\n" +
     "Actividad que quiero:\n" +
-    "(Reemplazá la línea de abajo, sacá los corchetes. No escribas adentro.)\n" +
     "\n" +
-    "[vacío]";
+    "[vacío]\n" +
+    "\n" +
+    "Reemplazá [vacío] por la descripción de la actividad a crear. Sacá los corchetes: no se escribe adentro.";
 
   window.AulaPrompt = {
     reglas: REGLAS,

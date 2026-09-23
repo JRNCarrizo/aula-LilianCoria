@@ -2,12 +2,55 @@
   padding: 28px 0 64px;
 }
 
-.admin-login {
-  width: min(440px, calc(100% - 40px));
-  margin: 48px auto;
+.login-cuerpo .site-footer { margin-top: 0; }
+
+.login-pagina {
+  min-height: calc(100dvh - 78px);
+  display: grid;
+  place-items: center;
+  padding: 36px 20px 56px;
 }
 
-.admin-login h1 { font-size: clamp(32px, 6vw, 44px); }
+.login-card {
+  width: min(440px, 100%);
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: 28px;
+  padding: 36px 32px 32px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.login-marca {
+  margin: 0 auto 18px;
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+}
+
+.login-card .sello { margin-bottom: 12px; }
+
+.login-card h1 {
+  font-size: clamp(32px, 6vw, 44px);
+  margin-bottom: 8px;
+}
+
+.login-texto {
+  margin: 0 auto 24px;
+  max-width: 32ch;
+  color: var(--ink-soft);
+}
+
+.login-card .campo { text-align: left; }
+
+.login-entrar {
+  width: 100%;
+  margin-top: 6px;
+}
+
+@media (max-width: 720px) {
+  .login-card { padding: 28px 22px 24px; }
+}
 
 .campo {
   display: flex;
@@ -69,20 +112,41 @@
   .admin-grid.admin-grid-3 { grid-template-columns: repeat(3, 1fr); }
 }
 
+.bloque-publicadas { margin: 8px 0 28px; }
+
 .caja-prompt {
   margin: 28px 0 8px;
-  padding: 22px;
+  padding: 8px 22px 22px;
 }
 
-.caja-prompt h2 {
+.caja-prompt summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 0 6px;
+}
+
+.caja-prompt summary::-webkit-details-marker { display: none; }
+
+.caja-prompt summary h2 {
   font-size: clamp(26px, 4vw, 34px);
   margin-bottom: 8px;
 }
 
-.caja-prompt > p {
+.caja-prompt summary h2::after {
+  content: " ▾";
+  font-size: 0.7em;
+  color: var(--sage-deep);
+}
+
+.caja-prompt[open] summary h2::after { content: " ▴"; }
+
+.caja-prompt summary p,
+.caja-prompt .prompt-cuerpo > p {
   color: var(--ink-soft);
   max-width: 62ch;
 }
+
+.prompt-cuerpo { padding-top: 8px; }
 
 .prompt-fijo {
   margin: 16px 0 0;
