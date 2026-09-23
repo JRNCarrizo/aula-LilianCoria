@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ajustes · Aula Lilian Coria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/site.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body data-root="../">
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="panel.html">
+        <span class="brand-mark">LC</span>
+        <span>
+          <span class="brand-kicker">Panel</span>
+          <span class="brand-name">Lilian Coria</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="panel.html">Panel</a>
+        <a href="nueva.html">Nueva</a>
+        <a href="ajustes.html" aria-current="page">Ajustes</a>
+        <a href="../">El aula</a>
+        <a href="#" id="salir">Salir</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap admin-cuerpo">
+    <header class="page-head">
+      <p class="eyebrow">Ajustes</p>
+      <h1>Drive y acceso</h1>
+      <p>Conectá un Google Drive. Se puede desconectar y entrar con otra cuenta cuando quieran.</p>
+    </header>
+
+    <section class="panel">
+      <h2>Google Drive</h2>
+      <p class="estado-drive">
+        <span class="punto" id="punto"></span>
+        <span id="estado-texto">Sin conectar</span>
+      </p>
+      <p class="aviso aviso-mal" id="error" hidden></p>
+      <p class="aviso aviso-ok" id="ok" hidden></p>
+      <div class="acciones">
+        <button class="btn btn-terra" type="button" id="btn-conectar">Conectar Drive</button>
+        <button class="btn btn-ghost" type="button" id="btn-cambiar">Cambiar de Drive</button>
+        <button class="btn btn-ghost" type="button" id="btn-salir-drive">Desconectar</button>
+      </div>
+      <p class="ficha-linea" id="ids" style="margin-top:16px"></p>
+    </section>
+
+    <section class="panel" style="margin-top:20px">
+      <h2>Una sola vez: claves de Google</h2>
+      <p>Para que el aula pueda guardar en Drive sin que entre nadie a drive.google.com, hay que crear un proyecto en Google Cloud y pegar acá el Client ID y la API Key. Se editan en <code>js/admin-config.js</code>.</p>
+      <ol class="lista-incluida">
+        <li>Entrá a Google Cloud Console y creá un proyecto.</li>
+        <li>Activá la API de Google Drive.</li>
+        <li>Credenciales: Client ID para “Aplicación web”. En orígenes autorizados poné la URL del aula (Netlify) y <code>http://localhost:5173</code>.</li>
+        <li>Creá también una API Key restringida a este sitio.</li>
+        <li>Pegá los dos valores en <code>js/admin-config.js</code> y volvé a subir el sitio.</li>
+      </ol>
+      <p class="ficha-linea" id="cfg-estado"></p>
+    </section>
+  </main>
+
+  <script src="../js/admin-config.js"></script>
+  <script src="../js/admin-auth.js"></script>
+  <script src="../js/admin-drive.js"></script>
+  <script>
+    if (!AulaAuth.pedir()) throw new Error("sin sesion");
+    document.getElementById("salir").addEventListener("click", function (e) {
+      e.preventDefault();
+      AulaAuth.salir();
+      location.href = "./";
+    });
+
+    var cfg = window.AULA_ADMIN || {};
+    document.getElementById("cfg-estado").textContent = cfg.googleClientId
+      ? "Client ID cargado. Ya se puede conectar."
+      : "Todavía no hay Client ID. El botón de conectar va a pedir esa clave.";
+
+    function pintarEstado() {
+      var on = AulaDrive.conectado();
+      document.getElementById("punto").classList.toggle("ok", on);
+      document.getElementById("estado-texto").textContent = on
+        ? ("Conectado" + (AulaDrive.cuenta() ? " · " + AulaDrive.cuenta() : ""))
+        : "Sin conectar";
+      var id = AulaDrive.catalogoId();
+      document.getElementById("ids").textContent = id
+        ? "Catálogo en Drive: " + id
+        : "";
+    }
+
+    function conectar(cambiar) {
+      document.getElementById("error").hidden = true;
+      document.getElementById("ok").hidden = true;
+      if (cambiar) AulaDrive.desconectar();
+      AulaDrive.conectar().then(function () {
+        document.getElementById("ok").textContent = cambiar
+          ? "Drive cambiado. Las próximas publicaciones van a esta cuenta."
+          : "Drive conectado. Ya se puede publicar desde el aula.";
+        document.getElementById("ok").hidden = false;
+        pintarEstado();
+      }).catch(function (err) {
+        document.getElementById("error").textContent = err.message || "No se pudo conectar.";
+        document.getElementById("error").hidden = false;
+        pintarEstado();
+      });
+    }
+
+    document.getElementById("btn-conectar").addEventListener("click", function () { conectar(false); });
+    document.getElementById("btn-cambiar").addEventListener("click", function () { conectar(true); });
+    document.getElementById("btn-salir-drive").addEventListener("click", function () {
+      AulaDrive.desconectar();
+      document.getElementById("ok").textContent = "Drive desconectado.";
+      document.getElementById("ok").hidden = false;
+      pintarEstado();
+    });
+    pintarEstado();
+  </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+.admin-cuerpo {
+  padding: 28px 0 64px;
+}
+
+.admin-login {
+  width: min(440px, calc(100% - 40px));
+  margin: 48px auto;
+}
+
+.admin-login h1 { font-size: clamp(32px, 6vw, 44px); }
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.campo[hidden] {
+  display: none;
+}
+
+.campo label {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  min-height: 48px;
+  width: 100%;
+}
+
+.campo textarea { min-height: 120px; resize: vertical; }
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: 3px solid #ffe14a;
+  outline-offset: 2px;
+}
+
+.aviso {
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 12px 0;
+}
+
+.aviso-ok { background: #7dffc3; color: #08543a; }
+.aviso-mal { background: #ffb4c8; color: #8f1040; }
+.aviso-info { background: #ffe14a; color: #3d2a00; }
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 960px) {
+  .admin-grid.admin-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+.caja-prompt {
+  margin: 28px 0 8px;
+  padding: 22px;
+}
+
+.caja-prompt h2 {
+  font-size: clamp(26px, 4vw, 34px);
+  margin-bottom: 8px;
+}
+
+.caja-prompt > p {
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.prompt-fijo {
+  margin: 16px 0 0;
+  max-height: 280px;
+  overflow: auto;
+  background: #fff8d6;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.acciones-prompt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.admin-atajo {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  min-height: 140px;
+}
+
+.admin-atajo h2 { font-size: 26px; margin-bottom: 8px; }
+.admin-atajo p { color: var(--ink-soft); margin: 0; }
+
+.page-head-sub {
+  padding-top: 28px;
+}
+
+.page-head-sub h2 {
+  font-size: clamp(28px, 5vw, 40px);
+}
+
+.lista-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.item-admin {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 14px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.item-admin img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #ffe3f0;
+}
+
+.item-admin h3 { font-size: 22px; margin-bottom: 4px; }
+.item-admin p { margin: 0; color: var(--ink-soft); font-size: 14px; }
+
+.acciones-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.acciones-item a,
+.acciones-item button {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.acciones-item .btn-eliminar {
+  color: #b01050;
+}
+
+.tipo-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.tipo-switch button {
+  min-height: 48px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  border-radius: 14px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.tipo-switch button.is-on {
+  background: var(--sage);
+  border-color: var(--sage);
+  color: #fff;
+}
+
+.estado-drive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.punto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c45c4a;
+}
+.punto.ok { background: #00c6e8; }
+
+@media (max-width: 720px) {
+  .admin-grid { grid-template-columns: 1fr; }
+  .item-admin { grid-template-columns: 56px 1fr; }
+  .item-admin img { width: 56px; height: 56px; }
+  .admin-cuerpo { padding: 18px 0 48px; }
+}

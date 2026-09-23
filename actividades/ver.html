@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Actividad · Aula Lilian Coria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/site.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-root="../" data-page="actividades">
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../">
+        <span class="brand-mark">LC</span>
+        <span>
+          <span class="brand-kicker">Aula</span>
+          <span class="brand-name">Lilian Coria</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="../">Inicio</a>
+        <a href="./" data-nav="actividades">Actividades</a>
+        <a href="../sobre.html">El aula</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <header class="page-head" id="cabeza">
+      <p class="eyebrow">Actividad</p>
+      <h1>Cargando…</h1>
+    </header>
+    <section class="actividad-layout" id="cuerpo"></section>
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <script src="../js/actividades.js"></script>
+  <script src="../js/publicaciones-config.js"></script>
+  <script src="../js/catalogo.js"></script>
+  <script src="../js/ficha-portada.js"></script>
+  <script src="../js/site.js"></script>
+  <script>
+    function pintar(item) {
+      if (!item) {
+        var extras = [];
+        try { extras = JSON.parse(localStorage.getItem("aula_publicaciones") || "[]"); } catch (e) {}
+        if (extras.length) {
+          document.getElementById("cabeza").innerHTML = "<p class='eyebrow'>Actividades</p><h1>Elegí una ficha</h1>";
+          document.getElementById("cuerpo").innerHTML = extras.map(function (a) {
+            AulaCatalogo.recordar(a);
+            return '<a class="card-uso" style="display:block;margin-bottom:12px;text-decoration:none" href="ver.html?id=' +
+              encodeURIComponent(a.id || a.archivoNombre || "") + '"><h2>' + (a.titulo || "Sin título") +
+              "</h2><p>" + (a.grado || "") + " · " + (a.area || "") + "</p></a>";
+          }).join("");
+          return;
+        }
+        document.getElementById("cabeza").innerHTML =
+          "<h1>Todavía no se ve esta ficha</h1>" +
+          "<p>Entrá al <a href=\"../admin/panel.html\">panel</a>, conectá Drive si hace falta, y tocá el título de la actividad. No abras el archivo HTML del escritorio.</p>";
+        return;
+      }
+      document.title = item.titulo + " · Aula Lilian Coria";
+      document.getElementById("cabeza").innerHTML = AulaPortada.cabeza(item);
+      document.getElementById("cuerpo").innerHTML = AulaPortada.cuerpo(item);
+    }
+
+    var id = new URLSearchParams(location.search).get("id");
+    AulaCatalogo.buscar(id).then(pintar);
+  </script>
+</body>
+</html>

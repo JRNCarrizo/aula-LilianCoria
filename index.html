@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/site.css">
 </head>
 <body data-root="" data-page="inicio">
@@ -38,7 +39,7 @@
           <p class="lead">Un espacio para guardar, abrir e imprimir las actividades que voy creando día a día. Todas las áreas, todos los grados.</p>
           <div class="acciones">
             <a class="btn btn-terra" href="actividades/">Ver actividades</a>
-            <a class="btn btn-ghost" href="actividades/la-tortilla-de-papas/">Abrir la última ficha</a>
+            <a class="btn btn-ghost" href="actividades/la-tortilla-de-papas/" data-ultima>Abrir la última ficha</a>
           </div>
           <ul class="areas-vivo">
             <li>Lengua</li>
@@ -100,12 +101,14 @@
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
-      <p>Aula Lilian Coria · Recursos de clase</p>
+      <p>Aula Lilian Coria</p>
       <p>© <span data-year></span></p>
     </div>
   </footer>
 
   <script src="js/actividades.js"></script>
+  <script src="js/publicaciones-config.js"></script>
+  <script src="js/catalogo.js"></script>
   <script src="js/site.js"></script>
 </body>
 </html>

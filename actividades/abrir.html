@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Abriendo ficha · Aula Lilian Coria</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/site.css">
+</head>
+<body data-root="../">
+  <main class="wrap" style="padding:48px 0">
+    <p class="eyebrow">Ficha</p>
+    <h1 id="estado">Abriendo la ficha…</h1>
+    <p id="detalle">Un segundo. Se está cargando desde Drive.</p>
+  </main>
+  <script src="../js/publicaciones-config.js"></script>
+  <script src="../js/actividades.js"></script>
+  <script src="../js/catalogo.js"></script>
+  <script>
+    var params = new URLSearchParams(location.search);
+    var id = params.get("id");
+    var file = params.get("file");
+    var estado = document.getElementById("estado");
+    var detalle = document.getElementById("detalle");
+
+    function fallar(mensaje) {
+      estado.textContent = "No se pudo abrir la ficha";
+      detalle.innerHTML = (mensaje || "Intentá de nuevo desde el panel.") +
+        ' <a href="./">Volver al listado</a>';
+    }
+
+    function limpiarFicha(html) {
+      var inicio = html.search(/<!DOCTYPE html>/i);
+      if (inicio === -1) inicio = html.search(/<html[\s>]/i);
+      if (inicio > 0) html = html.slice(inicio);
+      var fin = html.toLowerCase().lastIndexOf("</html>");
+      if (fin !== -1) html = html.slice(0, fin + 7);
+      return html;
+    }
+
+    function mostrar(html) {
+      html = limpiarFicha(html || "");
+      if (!html || html.indexOf("<html") === -1 && html.indexOf("<!DOCTYPE") === -1) {
+        fallar("Drive devolvió el archivo, pero no es una ficha HTML.");
+        return;
+      }
+      document.open();
+      document.write(html);
+      document.close();
+    }
+
+    AulaCatalogo.buscar(id).then(function (item) {
+      var fileId = file || (item && item.driveFileId);
+      if (!fileId) {
+        fallar("No está el archivo de esta ficha. Publicála de nuevo desde el panel.");
+        return;
+      }
+      return AulaCatalogo.bajarHtml(fileId).then(mostrar);
+    }).catch(function (err) {
+      fallar(err.message || "Conectá Drive en Ajustes y volvé a abrir.");
+    });
+  </script>
+</body>
+</html>

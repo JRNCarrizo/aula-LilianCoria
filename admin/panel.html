@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · Aula Lilian Coria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/site.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-root="../">
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="panel.html">
+        <span class="brand-mark">LC</span>
+        <span>
+          <span class="brand-kicker">Panel</span>
+          <span class="brand-name">Lilian Coria</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="panel.html" aria-current="page">Panel</a>
+        <a href="nueva.html">Nueva</a>
+        <a href="ajustes.html">Ajustes</a>
+        <a href="../">El aula</a>
+        <a href="#" id="salir">Salir</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap admin-cuerpo">
+    <header class="page-head">
+      <p class="eyebrow">Panel</p>
+      <h1>Panel</h1>
+      <p>Acá se copia el prompt para armar una ficha, se publica y se ve lo que ya está en el aula.</p>
+    </header>
+
+    <div class="admin-grid admin-grid-3">
+      <a class="admin-atajo" href="nueva.html">
+        <p class="eyebrow">Crear</p>
+        <h2>Nueva actividad</h2>
+        <p>Subí un HTML, un Word, un PowerPoint o un PDF y publicá.</p>
+      </a>
+      <a class="admin-atajo" href="#prompt-ficha">
+        <p class="eyebrow">ChatGPT</p>
+        <h2>Prompt de ficha</h2>
+        <p>Copiá el prompt y reemplazá el vacío por tu actividad.</p>
+      </a>
+      <a class="admin-atajo" href="ajustes.html">
+        <p class="eyebrow">Cuenta</p>
+        <h2>Conectar Drive</h2>
+        <p>Elegí o cambiá el Drive donde se guardan los archivos.</p>
+      </a>
+    </div>
+
+    <section class="panel caja-prompt" id="prompt-ficha">
+      <p class="eyebrow">Crear ficha</p>
+      <h2>Prompt para ChatGPT</h2>
+      <p>Copiá el prompt, pegalo en ChatGPT y reemplazá <strong>[vacío]</strong> por la descripción. Sacá los corchetes: no se escribe adentro.</p>
+      <pre class="prompt-fijo" id="prompt-reglas"></pre>
+      <div class="acciones-prompt">
+        <button class="btn btn-terra" type="button" id="btn-copiar-prompt">Copiar prompt</button>
+        <p class="aviso aviso-ok" id="ok-copia" hidden style="margin:0">Copiado. Pegalo en ChatGPT.</p>
+      </div>
+    </section>
+
+    <section class="bloque-publicadas">
+      <header class="page-head page-head-sub">
+        <p class="eyebrow">Listado</p>
+        <h2>Actividades publicadas</h2>
+        <p>Lo que ya está cargado en Drive y se ve en el aula.</p>
+      </header>
+      <div class="lista-admin" id="lista"></div>
+    </section>
+  </main>
+
+  <script src="../js/admin-config.js"></script>
+  <script src="../js/admin-auth.js"></script>
+  <script src="../js/admin-drive.js"></script>
+  <script src="../js/catalogo.js"></script>
+  <script src="../js/prompt-ficha.js"></script>
+  <script>
+    if (!AulaAuth.pedir()) throw new Error("sin sesion");
+    document.getElementById("salir").addEventListener("click", function (e) {
+      e.preventDefault();
+      AulaAuth.salir();
+      location.href = "./";
+    });
+
+    document.getElementById("prompt-reglas").textContent = AulaPrompt.reglas;
+    document.getElementById("btn-copiar-prompt").addEventListener("click", function () {
+      var ok = document.getElementById("ok-copia");
+      var texto = AulaPrompt.armar();
+      AulaPrompt.copiar(texto).then(function () {
+        ok.hidden = false;
+        setTimeout(function () { ok.hidden = true; }, 2500);
+      });
+    });
+
+    var itemsActuales = [];
+
+    function pintar(items) {
+      itemsActuales = items || [];
+      var caja = document.getElementById("lista");
+      if (!itemsActuales.length) {
+        caja.innerHTML = '<p class="vacio">Todavía no hay publicaciones cargadas desde el panel.</p>';
+        return;
+      }
+      caja.innerHTML = itemsActuales.map(function (a) {
+        var img = a.vistaPrevia
+          ? '<img src="' + a.vistaPrevia + '" alt="">'
+          : '<img alt="" src="data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22><rect fill=%22%23e7f6f3%22 width=%2280%22 height=%2280%22 rx=%2212%22/></svg>">';
+        return '<article class="item-admin">' + img +
+          "<div><h3>" + a.titulo + "</h3><p>" + a.grado + " · " + a.area + " · " + a.tipo + "</p>" +
+          '<div class="acciones-item">' +
+            '<a href="../actividades/ver.html?id=' + encodeURIComponent(a.id || "") + '">Ver</a>' +
+            '<a href="nueva.html?id=' + encodeURIComponent(a.id || "") +
+              '" data-json="' + encodeURIComponent(JSON.stringify(a)) +
+              '" onclick="sessionStorage.setItem(\'aula_editar\',decodeURIComponent(this.getAttribute(\'data-json\')));localStorage.setItem(\'aula_editar\',sessionStorage.getItem(\'aula_editar\'));">Editar</a>' +
+            '<button type="button" class="btn-eliminar" data-id="' + encodeURIComponent(a.id || "") + '">Eliminar</button>' +
+          "</div></div></article>";
+      }).join("");
+      caja.querySelectorAll("a[href*='ver.html']").forEach(function (enlace, i) {
+        enlace.addEventListener("click", function () {
+          if (window.AulaCatalogo) AulaCatalogo.recordar(itemsActuales[i]);
+        });
+      });
+      caja.querySelectorAll(".btn-eliminar").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+          var id = decodeURIComponent(boton.getAttribute("data-id") || "");
+          var item = itemsActuales.filter(function (a) { return a && a.id === id; })[0];
+          if (!item) return;
+          if (!confirm("¿Eliminar «" + item.titulo + "»? Se saca del aula y de Drive.")) return;
+          boton.disabled = true;
+          boton.textContent = "Eliminando…";
+          AulaDrive.eliminar(item).then(function (lista) {
+            pintar(lista || []);
+          }).catch(function (err) {
+            boton.disabled = false;
+            boton.textContent = "Eliminar";
+            alert(err.message || "No se pudo eliminar.");
+          });
+        });
+      });
+    }
+
+    function listaPanel() {
+      var lista = AulaDrive.locales().slice();
+      try {
+        var ultima = JSON.parse(localStorage.getItem("aula_ultima") || "null");
+        if (ultima && ultima.id && !lista.some(function (a) { return a.id === ultima.id; })) {
+          lista.unshift(ultima);
+        }
+      } catch (e) {}
+      return lista;
+    }
+
+    pintar(listaPanel());
+    if (AulaDrive.conectado()) {
+      AulaDrive.leerCatalogo().then(function (cat) {
+        var lista = cat.actividades || [];
+        if (!lista.length) lista = listaPanel();
+        if (lista.length) AulaDrive.guardarLocales(lista);
+        pintar(lista);
+      }).catch(function () {
+        pintar(listaPanel());
+      });
+    }
+  </script>
+</body>
+</html>

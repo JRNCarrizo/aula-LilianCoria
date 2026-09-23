@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nueva actividad · Aula Lilian Coria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/site.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body data-root="../">
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="panel.html">
+        <span class="brand-mark">LC</span>
+        <span>
+          <span class="brand-kicker">Panel</span>
+          <span class="brand-name">Lilian Coria</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="panel.html">Panel</a>
+        <a href="nueva.html" aria-current="page">Nueva</a>
+        <a href="ajustes.html">Ajustes</a>
+        <a href="../">El aula</a>
+        <a href="#" id="salir">Salir</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap admin-cuerpo">
+    <header class="page-head">
+      <p class="eyebrow">Publicar</p>
+      <h1>Nueva actividad</h1>
+      <p>El archivo se guarda en Drive. En cada campo está el ejemplo de La tortilla de papas. Si todavía no tenés el HTML, copiá el prompt en el <a href="panel.html#prompt-ficha">panel</a>.</p>
+    </header>
+
+    <p class="aviso aviso-info" id="aviso-drive"></p>
+
+    <form id="form-nueva" class="panel">
+      <div class="tipo-switch" role="group" aria-label="Tipo de actividad">
+        <button type="button" class="is-on" data-tipo="html">Ficha HTML</button>
+        <button type="button" data-tipo="archivo">Archivo ya hecho</button>
+      </div>
+
+      <div class="campo">
+        <label for="titulo">Título</label>
+        <input id="titulo" name="titulo" required placeholder="La tortilla de papas">
+      </div>
+      <div class="campo">
+        <label for="kicker">Etiqueta corta</label>
+        <input id="kicker" name="kicker" placeholder="Después de leer">
+      </div>
+      <div class="campo">
+        <label for="grado">Grado</label>
+        <select id="grado" name="grado" required>
+          <option value="">Elegí un grado</option>
+        </select>
+      </div>
+      <div class="campo" id="campo-grado-nuevo" hidden>
+        <label for="grado-nuevo">Nuevo grado</label>
+        <input id="grado-nuevo" name="grado-nuevo" placeholder="Ej. 2.º">
+      </div>
+      <div class="campo">
+        <label for="area">Área</label>
+        <select id="area" name="area" required>
+          <option value="">Elegí un área</option>
+        </select>
+      </div>
+      <div class="campo" id="campo-area-nueva" hidden>
+        <label for="area-nueva">Nueva área</label>
+        <input id="area-nueva" name="area-nueva" placeholder="Ej. Matemática">
+      </div>
+      <div class="campo">
+        <label for="resumen">Descripción</label>
+        <textarea id="resumen" name="resumen" required placeholder="Actividades para primer grado a partir del cuento de Sandra Siemens y Claudia Degliuomini. Letras iniciales, escritura de nombres, y un crucigrama que pide atender el género y el número."></textarea>
+      </div>
+      <div class="campo">
+        <label for="paginas">Páginas (si se sabe)</label>
+        <input id="paginas" name="paginas" type="number" min="1" placeholder="8">
+      </div>
+      <div class="campo">
+        <label for="incluye">Qué incluye</label>
+        <textarea id="incluye" name="incluye" required placeholder="Ocho tarjetas para redondear lo que empieza con T, N, L, A, P, S, H y M.&#10;Completar nombres: sílaba inicial, sílaba final o consonantes.&#10;Escritura de lo que compró Sebastiana, al modo de EyA, páginas 166 y 167.&#10;Crucigrama con imágenes y pistas.&#10;Clave de respuestas, solo para la docente."></textarea>
+      </div>
+      <div class="campo">
+        <label for="uso">Cómo usarla</label>
+        <textarea id="uso" name="uso" placeholder="Abrir la ficha, imprimir las hojas o guardarlas como PDF desde el navegador. La última página no se entrega a los chicos."></textarea>
+      </div>
+      <div class="campo">
+        <label for="nota-kicker">Recuadro: etiqueta</label>
+        <input id="nota-kicker" name="nota-kicker" placeholder="Cuento de partida">
+      </div>
+      <div class="campo">
+        <label for="nota-titulo">Recuadro: título</label>
+        <input id="nota-titulo" name="nota-titulo" placeholder="Sebastiana y Nicolasa">
+      </div>
+      <div class="campo">
+        <label for="nota-texto">Recuadro: texto</label>
+        <textarea id="nota-texto" name="nota-texto" placeholder="Las propuestas siguen las compras, los nombres y las palabras del cuento: tomates, naranjas, lirios, aceitunas, panes, papas, huevos y mesa."></textarea>
+      </div>
+      <div class="campo">
+        <label for="docente">Docente</label>
+        <input id="docente" name="docente" value="Lilian Coria">
+      </div>
+      <div class="campo">
+        <label for="archivo" id="label-archivo">Archivo HTML de la ficha</label>
+        <input id="archivo" name="archivo" type="file" required>
+      </div>
+      <div class="campo">
+        <label for="portada">Captura o foto para la previa</label>
+        <input id="portada" name="portada" type="file" accept="image/*">
+        <p class="ficha-linea">Opcional. JPG o PNG. Se ve en el listado. Si no hay, Drive usa una miniatura cuando puede.</p>
+      </div>
+
+      <p class="aviso aviso-mal" id="error" hidden></p>
+      <p class="aviso aviso-ok" id="ok" hidden>Publicada. Ya se puede ver en el aula.</p>
+      <button class="btn btn-terra" type="submit" id="btn-pub">Publicar</button>
+    </form>
+  </main>
+
+  <script src="../js/admin-config.js"></script>
+  <script src="../js/admin-auth.js"></script>
+  <script src="../js/admin-drive.js"></script>
+  <script src="../js/actividades.js"></script>
+  <script src="../js/ficha-portada.js"></script>
+  <script src="../js/catalogo.js"></script>
+  <script>
+    if (!AulaAuth.pedir()) throw new Error("sin sesion");
+    document.getElementById("salir").addEventListener("click", function (e) {
+      e.preventDefault();
+      AulaAuth.salir();
+      location.href = "./";
+    });
+
+    var tipo = "html";
+    var editando = null;
+    var LS_AREAS = "aula_areas";
+    var LS_GRADOS = "aula_grados";
+    var aviso = document.getElementById("aviso-drive");
+    var selArea = document.getElementById("area");
+    var campoNueva = document.getElementById("campo-area-nueva");
+    var inputNueva = document.getElementById("area-nueva");
+    var selGrado = document.getElementById("grado");
+    var campoGradoNuevo = document.getElementById("campo-grado-nuevo");
+    var inputGradoNuevo = document.getElementById("grado-nuevo");
+    if (AulaDrive.conectado()) {
+      aviso.textContent = "Drive conectado" + (AulaDrive.cuenta() ? " · " + AulaDrive.cuenta() : "") + ". El archivo se va a guardar ahí.";
+    } else {
+      aviso.textContent = "Todavía no hay un Drive conectado. Andá a Ajustes, conectalo y volvé.";
+    }
+
+    function esc(texto) {
+      return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function leerAreasGuardadas() {
+      try {
+        return JSON.parse(localStorage.getItem(LS_AREAS) || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function guardarArea(nombre) {
+      if (!nombre) return;
+      var lista = leerAreasGuardadas();
+      if (lista.indexOf(nombre) === -1) {
+        lista.push(nombre);
+        localStorage.setItem(LS_AREAS, JSON.stringify(lista));
+      }
+    }
+
+    function areasConocidas() {
+      var vistas = {};
+      function sumar(nombre) {
+        if (nombre) vistas[nombre] = true;
+      }
+      leerAreasGuardadas().forEach(sumar);
+      (window.AULA_ACTIVIDADES || []).forEach(function (a) { sumar(a.area); });
+      AulaDrive.locales().forEach(function (a) { sumar(a.area); });
+      return Object.keys(vistas).sort(function (a, b) {
+        return a.localeCompare(b, "es", { sensitivity: "base" });
+      });
+    }
+
+    function pintarAreas(elegida) {
+      selArea.innerHTML = '<option value="">Elegí un área</option>' +
+        areasConocidas().map(function (area) {
+          return '<option value="' + esc(area) + '"' +
+            (area === elegida ? " selected" : "") + ">" + esc(area) + "</option>";
+        }).join("") +
+        '<option value="__nueva__">Agregar otra…</option>';
+    }
+
+    function mostrarNuevaArea(mostrar) {
+      campoNueva.hidden = !mostrar;
+      inputNueva.required = mostrar;
+      if (mostrar) inputNueva.focus();
+      else inputNueva.value = "";
+    }
+
+    function leerGradosGuardados() {
+      try {
+        return JSON.parse(localStorage.getItem(LS_GRADOS) || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function guardarGrado(nombre) {
+      if (!nombre) return;
+      var lista = leerGradosGuardados();
+      if (lista.indexOf(nombre) === -1) {
+        lista.push(nombre);
+        localStorage.setItem(LS_GRADOS, JSON.stringify(lista));
+      }
+    }
+
+    function gradosConocidos() {
+      var vistas = {};
+      function sumar(nombre) {
+        if (nombre) vistas[nombre] = true;
+      }
+      ["1.º", "2.º", "3.º", "4.º", "5.º", "6.º"].forEach(sumar);
+      leerGradosGuardados().forEach(sumar);
+      (window.AULA_ACTIVIDADES || []).forEach(function (a) { sumar(a.grado); });
+      AulaDrive.locales().forEach(function (a) { sumar(a.grado); });
+      return Object.keys(vistas).sort(function (a, b) {
+        return a.localeCompare(b, "es", { numeric: true, sensitivity: "base" });
+      });
+    }
+
+    function pintarGrados(elegido) {
+      selGrado.innerHTML = '<option value="">Elegí un grado</option>' +
+        gradosConocidos().map(function (grado) {
+          return '<option value="' + esc(grado) + '"' +
+            (grado === elegido ? " selected" : "") + ">" + esc(grado) + "</option>";
+        }).join("") +
+        '<option value="__nuevo__">Agregar otro…</option>';
+    }
+
+    function mostrarNuevoGrado(mostrar) {
+      campoGradoNuevo.hidden = !mostrar;
+      inputGradoNuevo.required = mostrar;
+      if (mostrar) inputGradoNuevo.focus();
+      else inputGradoNuevo.value = "";
+    }
+
+    function setTipo(nuevo) {
+      tipo = nuevo;
+      document.querySelectorAll(".tipo-switch button").forEach(function (b) {
+        b.classList.toggle("is-on", b.getAttribute("data-tipo") === tipo);
+      });
+      var input = document.getElementById("archivo");
+      var label = document.getElementById("label-archivo");
+      if (tipo === "html") {
+        label.textContent = editando ? "Cambiar HTML (opcional)" : "Archivo HTML de la ficha";
+        input.accept = ".html,text/html";
+      } else {
+        label.textContent = editando ? "Cambiar archivo (opcional)" : "Word, PowerPoint o PDF";
+        input.accept = ".doc,.docx,.ppt,.pptx,.pdf,application/pdf";
+      }
+      input.required = !editando;
+    }
+
+    function completarFormulario(item) {
+      editando = item;
+      document.title = "Editar · Aula Lilian Coria";
+      document.querySelector(".page-head .eyebrow").textContent = "Editar";
+      document.querySelector(".page-head h1").textContent = "Editar actividad";
+      document.querySelector(".page-head p").textContent = "Cambiá los textos. El archivo solo hace falta si querés reemplazar la ficha.";
+      document.getElementById("titulo").value = item.titulo || "";
+      document.getElementById("kicker").value = item.kicker || "";
+      document.getElementById("resumen").value = item.resumen || "";
+      document.getElementById("paginas").value = item.paginas || "";
+      document.getElementById("incluye").value = Array.isArray(item.incluye) ? item.incluye.join("\n") : (item.incluye || "");
+      document.getElementById("uso").value = item.uso || "";
+      document.getElementById("nota-kicker").value = item.notaKicker || "";
+      document.getElementById("nota-titulo").value = item.notaTitulo || "";
+      document.getElementById("nota-texto").value = item.notaTexto || "";
+      document.getElementById("docente").value = item.docente || "Lilian Coria";
+      document.getElementById("btn-pub").textContent = "Guardar cambios";
+      setTipo(item.tipo === "Archivo" ? "archivo" : "html");
+      pintarAreas(item.area);
+      pintarGrados(item.grado);
+      mostrarNuevoGrado(false);
+    }
+
+    pintarAreas();
+    pintarGrados();
+    selArea.addEventListener("change", function () {
+      mostrarNuevaArea(selArea.value === "__nueva__");
+    });
+    selGrado.addEventListener("change", function () {
+      mostrarNuevoGrado(selGrado.value === "__nuevo__");
+    });
+
+    function leerEdicionGuardada() {
+      try {
+        return JSON.parse(sessionStorage.getItem("aula_editar") || localStorage.getItem("aula_editar") || "null");
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function cargarEdicion() {
+      var idEditar = new URLSearchParams(location.search).get("id");
+      var guardada = leerEdicionGuardada();
+      if (!idEditar && !guardada) return;
+      if (guardada && (!idEditar || guardada.id === idEditar || !guardada.id)) {
+        completarFormulario(guardada);
+        return;
+      }
+      var lista = AulaDrive.locales().slice();
+      try {
+        var ultima = JSON.parse(localStorage.getItem("aula_ultima") || "null");
+        if (ultima) lista.unshift(ultima);
+      } catch (e) {}
+      if (guardada) lista.unshift(guardada);
+      var item = lista.find(function (a) { return a && a.id === idEditar; }) || guardada;
+      if (item) {
+        completarFormulario(item);
+        return;
+      }
+      document.getElementById("error").textContent = "No se pudo cargar esa actividad. Volvé al panel y tocá Editar de nuevo.";
+      document.getElementById("error").hidden = false;
+    }
+
+    cargarEdicion();
+
+    document.querySelectorAll(".tipo-switch button").forEach(function (boton) {
+      boton.addEventListener("click", function () {
+        setTipo(boton.getAttribute("data-tipo"));
+      });
+    });
+
+    document.getElementById("form-nueva").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var error = document.getElementById("error");
+      var ok = document.getElementById("ok");
+      var btn = document.getElementById("btn-pub");
+      error.hidden = true;
+      ok.hidden = true;
+      var archivo = document.getElementById("archivo").files[0];
+      var portada = document.getElementById("portada").files[0];
+      if (!editando && !archivo) {
+        error.textContent = "Elegí un archivo.";
+        error.hidden = false;
+        return;
+      }
+      if (archivo && tipo === "html" && !/\.html?$/i.test(archivo.name)) {
+        error.textContent = "Para una ficha HTML, subí un archivo .html.";
+        error.hidden = false;
+        return;
+      }
+      var areaElegida = selArea.value === "__nueva__"
+        ? inputNueva.value.trim()
+        : selArea.value.trim();
+      if (!areaElegida) {
+        error.textContent = "Elegí un área o escribí una nueva.";
+        error.hidden = false;
+        return;
+      }
+      var gradoElegido = selGrado.value === "__nuevo__"
+        ? inputGradoNuevo.value.trim()
+        : selGrado.value.trim();
+      if (!gradoElegido) {
+        error.textContent = "Elegí un grado o escribí uno nuevo.";
+        error.hidden = false;
+        return;
+      }
+      guardarArea(areaElegida);
+      guardarGrado(gradoElegido);
+      var slug = document.getElementById("titulo").value.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || ("actividad-" + Date.now());
+      var actividad = Object.assign({}, editando || {}, {
+        id: editando ? editando.id : slug + "-" + Date.now().toString().slice(-4),
+        titulo: document.getElementById("titulo").value.trim(),
+        kicker: document.getElementById("kicker").value.trim() || (tipo === "html" ? "Ficha imprimible" : "Archivo"),
+        grado: gradoElegido,
+        area: areaElegida,
+        resumen: document.getElementById("resumen").value.trim(),
+        paginas: Number(document.getElementById("paginas").value) || "",
+        incluye: AulaPortada.lineas(document.getElementById("incluye").value),
+        uso: document.getElementById("uso").value.trim(),
+        notaKicker: document.getElementById("nota-kicker").value.trim() || "Cuento de partida",
+        notaTitulo: document.getElementById("nota-titulo").value.trim(),
+        notaTexto: document.getElementById("nota-texto").value.trim(),
+        docente: document.getElementById("docente").value.trim() || "Lilian Coria",
+        tipo: tipo === "html" ? "Ficha HTML" : "Archivo",
+        origen: "drive"
+      });
+      btn.disabled = true;
+      btn.textContent = editando ? "Guardando…" : "Publicando…";
+      var tarea = editando
+        ? AulaDrive.actualizar(actividad, archivo, portada)
+        : AulaDrive.publicar(actividad, archivo, portada);
+      tarea.then(function (pub) {
+        if (window.AulaCatalogo) AulaCatalogo.recordar(pub);
+        location.href = "../actividades/ver.html?id=" + encodeURIComponent(pub.id);
+      }).catch(function (err) {
+        error.textContent = err.message || "No se pudo publicar.";
+        error.hidden = false;
+      }).then(function () {
+        btn.disabled = false;
+        btn.textContent = "Publicar";
+      });
+    });
+  </script>
+</body>
+</html>

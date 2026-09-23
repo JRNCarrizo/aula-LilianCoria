@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · Aula Lilian Coria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/site.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-root="../">
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../">
+        <span class="brand-mark">LC</span>
+        <span>
+          <span class="brand-kicker">Aula</span>
+          <span class="brand-name">Lilian Coria</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="../">Volver al aula</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-login panel">
+    <p class="eyebrow">Panel</p>
+    <h1>Entrar</h1>
+    <p>Esta parte es solo para cargar y publicar actividades.</p>
+    <form id="form-login">
+      <div class="campo">
+        <label for="clave">Clave</label>
+        <input id="clave" name="clave" type="password" autocomplete="current-password" required>
+      </div>
+      <p class="aviso aviso-mal" id="error" hidden>La clave no es correcta.</p>
+      <button class="btn btn-terra" type="submit">Entrar</button>
+    </form>
+  </main>
+
+  <script src="../js/admin-config.js"></script>
+  <script src="../js/admin-auth.js"></script>
+  <script>
+    if (AulaAuth.haySesion()) location.replace("/admin/panel.html");
+    document.getElementById("form-login").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var ok = AulaAuth.entrar(document.getElementById("clave").value);
+      document.getElementById("error").hidden = ok;
+      if (ok) location.replace("/admin/panel.html");
+    });
+  </script>
+</body>
+</html>
