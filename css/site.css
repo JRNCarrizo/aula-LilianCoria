@@ -1,10 +1,10 @@
 :root {
   --ink: #141428;
   --ink-soft: #4d4d72;
-  --paper: #fff7fb;
+  --paper: #f6f8ff;
   --sheet: #ffffff;
-  --cream: #ffe3f0;
-  --line: #ead4f0;
+  --cream: #e4e0ff;
+  --line: #d4d2f0;
   --terra: #ff2d8a;
   --terra-deep: #d4146c;
   --sage: #00c6e8;
@@ -22,14 +22,14 @@
 html {
   scroll-behavior: smooth;
   touch-action: manipulation;
-  background: #fff7fb;
+  background: #f6f8ff;
 }
 
 body {
   margin: 0;
   color: var(--ink);
   background:
-    radial-gradient(circle at 8% -8%, #ffb4de 0%, transparent 42%),
+    radial-gradient(circle at 8% -8%, #c4b4ff 0%, transparent 42%),
     radial-gradient(circle at 94% 6%, #7af0ff 0%, transparent 40%),
     radial-gradient(circle at 50% 110%, #ffe14a 0%, transparent 32%),
     var(--paper);
@@ -178,7 +178,7 @@ button,
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 80% at 8% 10%, #ff8ec8 0%, transparent 55%),
+    radial-gradient(ellipse 70% 80% at 8% 10%, #b8a4ff 0%, transparent 55%),
     radial-gradient(ellipse 50% 60% at 92% 0%, #5eefff 0%, transparent 48%),
     linear-gradient(180deg, #fff3a8 0%, transparent 70%);
   pointer-events: none;
@@ -238,7 +238,7 @@ button,
 
 .areas-vivo li:nth-child(1) { background: #ffe14a; }
 .areas-vivo li:nth-child(2) { background: #7af0ff; }
-.areas-vivo li:nth-child(3) { background: #ff8ec8; }
+.areas-vivo li:nth-child(3) { background: #c4b4ff; }
 .areas-vivo li:nth-child(4) { background: #c4b5ff; }
 .areas-vivo li:nth-child(5) { background: #7dffc3; }
 .areas-vivo li:nth-child(6) { background: #ffe14a; }
@@ -532,7 +532,7 @@ h3 { font-size: 26px; }
 .card-actividad,
 .card-uso {
   background: var(--sheet);
-  border: 2px solid #ead4f0;
+  border: 2px solid var(--line);
   border-radius: 22px;
   padding: 24px;
   box-shadow: var(--shadow);
@@ -574,7 +574,7 @@ h3 { font-size: 26px; }
 
 .card-meta li:nth-child(3n),
 .chip:nth-child(3n) {
-  background: #ff8ec8;
+  background: #c4b4ff;
 }
 
 .page-head { padding: 48px 0 12px; }
