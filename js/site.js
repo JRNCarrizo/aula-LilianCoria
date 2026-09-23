@@ -92,7 +92,7 @@
   }
 
   document.addEventListener("pointerdown", function (evento) {
-    var boton = evento.target.closest(".btn, .nav a, .filtro, .brand");
+    var boton = evento.target.closest(".btn, .filtro");
     if (boton) boton.classList.add("is-press");
   });
   document.addEventListener("pointerup", soltar);
