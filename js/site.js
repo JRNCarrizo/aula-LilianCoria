@@ -3,6 +3,7 @@
   var actividades = (window.AULA_ACTIVIDADES || []).slice();
   var paginas = {};
   var yendo = false;
+  var baseSitio = new URL(root || "./", location.href);
 
   function extrasLocales() {
     try { return JSON.parse(localStorage.getItem("aula_publicaciones") || "[]"); }
@@ -42,9 +43,25 @@
 
   fusionar(extrasLocales());
 
+  function urlDe(nombre) {
+    if (nombre === "actividades") return new URL("actividades/", baseSitio).href;
+    if (nombre === "sobre") return new URL("sobre.html", baseSitio).href;
+    return new URL("./", baseSitio).href;
+  }
+
+  function cualPagina(enlace) {
+    var nav = enlace.getAttribute("data-nav");
+    if (nav) return nav;
+    if (enlace.matches(".brand, .footer-marca .brand, .footer-marca a")) return "inicio";
+    var href = (enlace.getAttribute("href") || "").toLowerCase();
+    if (href.indexOf("sobre") !== -1) return "sobre";
+    if (href.indexOf("actividades") !== -1) return "actividades";
+    return "inicio";
+  }
+
   function pintarPie() {
     var anio = String(new Date().getFullYear());
-    var home = root || "./";
+    var home = urlDe("inicio");
     var caja = document.querySelector(".site-footer");
     if (!caja) {
       caja = document.createElement("footer");
@@ -64,9 +81,9 @@
           '<div>' +
             '<p class="footer-titulo">El sitio</p>' +
             '<nav class="footer-nav">' +
-              '<a href="' + home + '">Inicio</a>' +
-              '<a href="' + root + 'actividades/">Actividades</a>' +
-              '<a href="' + root + 'sobre.html">El aula</a>' +
+              '<a href="' + urlDe("inicio") + '">Inicio</a>' +
+              '<a href="' + urlDe("actividades") + '">Actividades</a>' +
+              '<a href="' + urlDe("sobre") + '">El aula</a>' +
             "</nav>" +
           "</div>" +
           "<div>" +
@@ -94,7 +111,7 @@
     var boton = evento.target.closest(".btn, .filtro");
     if (boton) boton.classList.add("is-press");
     var nav = evento.target.closest(".nav a, .site-header .brand, .footer-nav a, .footer-marca .brand");
-    if (nav) pedirPagina(nav.href);
+    if (nav) pedirPagina(urlDe(cualPagina(nav)));
   });
   document.addEventListener("pointerup", soltar);
   document.addEventListener("pointercancel", soltar);
@@ -250,29 +267,23 @@
     pintarDestacada();
   }
 
-  function esPaginaSitio(url) {
-    var path = url.pathname;
-    if (/\/admin(\/|$)/.test(path)) return false;
-    if (/ver\.html|abrir\.html|ficha\.html/.test(path)) return false;
-    if (/sobre\.html$/.test(path)) return true;
-    if (/\/actividades\/?$/.test(path) || /\/actividades\/index\.html$/.test(path)) return true;
-    if (/\/actividades\//.test(path)) return false;
-    if (/index\.html$/.test(path) || /\/$/.test(path)) return true;
-    return false;
-  }
-
   function mismaRuta(a, b) {
     function norm(u) {
-      return u.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, "") + u.search;
+      var path = u.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, "");
+      return path + u.search;
     }
     return norm(a) === norm(b);
   }
 
+  function clavePagina(href) {
+    var url = new URL(href, baseSitio);
+    return url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, "") || "/";
+  }
+
   function pedirPagina(href) {
     var url;
-    try { url = new URL(href, location.href); } catch (e) { return Promise.reject(); }
-    if (url.origin !== location.origin || !esPaginaSitio(url)) return Promise.reject();
-    var clave = url.href;
+    try { url = new URL(href, baseSitio); } catch (e) { return Promise.reject(); }
+    var clave = clavePagina(url.href);
     if (!paginas[clave]) {
       paginas[clave] = fetch(url.href, { credentials: "same-origin" }).then(function (res) {
         if (!res.ok) throw new Error("sin pagina");
@@ -285,24 +296,28 @@
     return paginas[clave];
   }
 
+  function pintarChrome() {
+    document.querySelectorAll("[data-nav]").forEach(function (a) {
+      a.setAttribute("href", urlDe(a.getAttribute("data-nav")));
+    });
+    document.querySelectorAll(".site-header .brand").forEach(function (a) {
+      a.setAttribute("href", urlDe("inicio"));
+    });
+    pintarPie();
+    marcarNav();
+  }
+
   function aplicarPagina(html, href, conHistorial) {
     var doc = new DOMParser().parseFromString(html, "text/html");
-    var nuevoHeader = doc.querySelector(".site-header");
     var nuevoMain = doc.querySelector("main");
-    var header = document.querySelector(".site-header");
     var main = document.querySelector("main");
-    if (!nuevoMain || !main) {
-      location.href = href;
-      return;
-    }
+    if (!nuevoMain || !main) return;
     document.title = doc.title;
     document.body.setAttribute("data-page", doc.body.getAttribute("data-page") || "");
     document.body.setAttribute("data-root", doc.body.getAttribute("data-root") || "");
     root = document.body.getAttribute("data-root") || "";
-    if (nuevoHeader && header) header.replaceWith(nuevoHeader);
     main.replaceWith(nuevoMain);
-    pintarPie();
-    marcarNav();
+    pintarChrome();
     areaActiva = "todas";
     gradoActivo = "todos";
     refrescar();
@@ -315,9 +330,7 @@
     yendo = true;
     pedirPagina(href).then(function (html) {
       aplicarPagina(html, href, conHistorial);
-    }).catch(function () {
-      location.href = href;
-    }).then(function () {
+    }).catch(function () {}).then(function () {
       yendo = false;
     });
   }
@@ -326,21 +339,24 @@
     var enlace = evento.target.closest(".nav a, .site-header .brand, .footer-nav a, .footer-marca .brand");
     if (!enlace || evento.defaultPrevented) return;
     if (evento.button !== 0 || evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) return;
-    var dest;
-    try { dest = new URL(enlace.href, location.href); } catch (e) { return; }
-    if (dest.origin !== location.origin || !esPaginaSitio(dest)) return;
+    var dest = urlDe(cualPagina(enlace));
     evento.preventDefault();
-    if (mismaRuta(dest, location)) return;
-    irA(dest.href, true);
+    if (mismaRuta(new URL(dest), location)) return;
+    irA(dest, true);
   });
 
   window.addEventListener("popstate", function () {
-    irA(location.href, false);
+    var path = location.pathname;
+    var dest = urlDe("inicio");
+    if (/sobre\.html$/.test(path) || /\/sobre\/?$/.test(path)) dest = urlDe("sobre");
+    else if (/\/actividades(\/|$)/.test(path)) dest = urlDe("actividades");
+    irA(dest, false);
   });
 
-  [root || "./", root + "actividades/", root + "sobre.html"].forEach(function (href) {
-    pedirPagina(href);
+  ["inicio", "actividades", "sobre"].forEach(function (nombre) {
+    pedirPagina(urlDe(nombre));
   });
+  pintarChrome();
 
   refrescar();
 
