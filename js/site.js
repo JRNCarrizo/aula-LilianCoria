@@ -1,6 +1,8 @@
 (function () {
   var root = document.body.getAttribute("data-root") || "";
   var actividades = (window.AULA_ACTIVIDADES || []).slice();
+  var paginas = {};
+  var yendo = false;
 
   function extrasLocales() {
     try { return JSON.parse(localStorage.getItem("aula_publicaciones") || "[]"); }
@@ -81,9 +83,6 @@
   }
 
   pintarPie();
-  document.querySelectorAll("[data-year]").forEach(function (el) {
-    el.textContent = String(new Date().getFullYear());
-  });
 
   function soltar() {
     document.querySelectorAll(".is-press").forEach(function (el) {
@@ -94,6 +93,8 @@
   document.addEventListener("pointerdown", function (evento) {
     var boton = evento.target.closest(".btn, .filtro");
     if (boton) boton.classList.add("is-press");
+    var nav = evento.target.closest(".nav a, .site-header .brand, .footer-nav a, .footer-marca .brand");
+    if (nav) pedirPagina(nav.href);
   });
   document.addEventListener("pointerup", soltar);
   document.addEventListener("pointercancel", soltar);
@@ -104,12 +105,18 @@
     }
   });
 
-  var page = document.body.getAttribute("data-page");
-  document.querySelectorAll("[data-nav]").forEach(function (link) {
-    if (link.getAttribute("data-nav") === page) {
-      link.setAttribute("aria-current", "page");
-    }
-  });
+  function marcarNav() {
+    var page = document.body.getAttribute("data-page");
+    document.querySelectorAll("[data-nav]").forEach(function (link) {
+      if (link.getAttribute("data-nav") === page) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  }
+
+  marcarNav();
 
   function hrefActividad(actividad) {
     if (actividad.driveFileId || actividad.origen === "drive") {
@@ -188,19 +195,19 @@
       "</div>";
   }
 
-  if (filtros) {
-    filtros.addEventListener("click", function (evento) {
-      var boton = evento.target.closest("[data-area], [data-grado]");
-      if (!boton) return;
-      if (boton.hasAttribute("data-area")) {
-        areaActiva = boton.getAttribute("data-area");
-      } else {
-        gradoActivo = boton.getAttribute("data-grado");
-      }
-      pintarFiltros();
-      pintarCatalogo();
-    });
-  }
+  document.addEventListener("click", function (evento) {
+    var boton = evento.target.closest("[data-filtros] [data-area], [data-filtros] [data-grado]");
+    if (!boton) return;
+    if (boton.hasAttribute("data-area")) {
+      areaActiva = boton.getAttribute("data-area");
+    } else {
+      gradoActivo = boton.getAttribute("data-grado");
+    }
+    catalogo = document.querySelector("[data-catalogo]");
+    filtros = document.querySelector("[data-filtros]");
+    pintarFiltros();
+    pintarCatalogo();
+  });
 
   function ultimaActividad() {
     try {
@@ -235,11 +242,105 @@
   }
 
   function refrescar() {
+    catalogo = document.querySelector("[data-catalogo]");
+    filtros = document.querySelector("[data-filtros]");
     ordenarLista();
     pintarFiltros();
     pintarCatalogo();
     pintarDestacada();
   }
+
+  function esPaginaSitio(url) {
+    var path = url.pathname;
+    if (/\/admin(\/|$)/.test(path)) return false;
+    if (/ver\.html|abrir\.html|ficha\.html/.test(path)) return false;
+    if (/sobre\.html$/.test(path)) return true;
+    if (/\/actividades\/?$/.test(path) || /\/actividades\/index\.html$/.test(path)) return true;
+    if (/\/actividades\//.test(path)) return false;
+    if (/index\.html$/.test(path) || /\/$/.test(path)) return true;
+    return false;
+  }
+
+  function mismaRuta(a, b) {
+    function norm(u) {
+      return u.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, "") + u.search;
+    }
+    return norm(a) === norm(b);
+  }
+
+  function pedirPagina(href) {
+    var url;
+    try { url = new URL(href, location.href); } catch (e) { return Promise.reject(); }
+    if (url.origin !== location.origin || !esPaginaSitio(url)) return Promise.reject();
+    var clave = url.href;
+    if (!paginas[clave]) {
+      paginas[clave] = fetch(url.href, { credentials: "same-origin" }).then(function (res) {
+        if (!res.ok) throw new Error("sin pagina");
+        return res.text();
+      }).catch(function (err) {
+        delete paginas[clave];
+        throw err;
+      });
+    }
+    return paginas[clave];
+  }
+
+  function aplicarPagina(html, href, conHistorial) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var nuevoHeader = doc.querySelector(".site-header");
+    var nuevoMain = doc.querySelector("main");
+    var header = document.querySelector(".site-header");
+    var main = document.querySelector("main");
+    if (!nuevoMain || !main) {
+      location.href = href;
+      return;
+    }
+    document.title = doc.title;
+    document.body.setAttribute("data-page", doc.body.getAttribute("data-page") || "");
+    document.body.setAttribute("data-root", doc.body.getAttribute("data-root") || "");
+    root = document.body.getAttribute("data-root") || "";
+    if (nuevoHeader && header) header.replaceWith(nuevoHeader);
+    main.replaceWith(nuevoMain);
+    pintarPie();
+    marcarNav();
+    areaActiva = "todas";
+    gradoActivo = "todos";
+    refrescar();
+    window.scrollTo(0, 0);
+    if (conHistorial) history.pushState({ aula: true }, "", href);
+  }
+
+  function irA(href, conHistorial) {
+    if (yendo) return;
+    yendo = true;
+    pedirPagina(href).then(function (html) {
+      aplicarPagina(html, href, conHistorial);
+    }).catch(function () {
+      location.href = href;
+    }).then(function () {
+      yendo = false;
+    });
+  }
+
+  document.addEventListener("click", function (evento) {
+    var enlace = evento.target.closest(".nav a, .site-header .brand, .footer-nav a, .footer-marca .brand");
+    if (!enlace || evento.defaultPrevented) return;
+    if (evento.button !== 0 || evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) return;
+    var dest;
+    try { dest = new URL(enlace.href, location.href); } catch (e) { return; }
+    if (dest.origin !== location.origin || !esPaginaSitio(dest)) return;
+    evento.preventDefault();
+    if (mismaRuta(dest, location)) return;
+    irA(dest.href, true);
+  });
+
+  window.addEventListener("popstate", function () {
+    irA(location.href, false);
+  });
+
+  [root || "./", root + "actividades/", root + "sobre.html"].forEach(function (href) {
+    pedirPagina(href);
+  });
 
   refrescar();
 
